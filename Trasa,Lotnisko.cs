@@ -10,7 +10,7 @@ public Trasa(double dystans, int czas) { this.Dystans = dystans;this.Czas = czas
 public double getDystans() { return this.Dystans; }
 public ArrayList getLotniska() { return Lotniska; }
 public void dodajLotnisko(Lotnisko L) { Lotniska.add(L); }
-public void usunLotnisko(Lotnisko L) { Lotnisko.}
+public void usunLotnisko(Lotnisko L) { Lotnisko.//}
 }
 public class Lotnisko()
 {
