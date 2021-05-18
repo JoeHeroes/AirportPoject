@@ -20,3 +20,4 @@ public class Lotnisko()
 	public getMiasto() { return this.Miasto; }
 	public getId() { return this.Id; }
 }
+//test
