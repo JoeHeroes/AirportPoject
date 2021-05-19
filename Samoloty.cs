@@ -2,9 +2,9 @@
 namespace Samolot
 public abstract class Samolot
 {
-	private double Zasieg;
-	private string Id;
-	private int LiczbaMiejsc
+	protected double Zasieg;
+	protected string Id;
+	protected int LiczbaMiejsc
 	public Samolot(double zasieg, string id, int liczbamiejsc) { this.Zasieg = zasieg;this.Id = id;this.LiczbaMiejsc = liczbamiejsc; }
 	public double getZasieg(return this.Zasieg;)
 	public string getId(return this.Id;)
