@@ -10,7 +10,7 @@ namespace LiniaLotnicza
 		private Trasa Trasa;
 		private DateTime DataLotu;
 		public Lot(Samolot s, Trasa t, DateTime data)
-		{ this.DataLotu = data; this.Trasa = t; this.Samolot = s; Rezerwacje = new ArrayList()};
+		{ this.DataLotu = data; this.Trasa = new Trasa(t); this.Samolot = new Samolot(s); Rezerwacje = new ArrayList()};
 		public ArrayList getRezerwacje() { return this.Rezerwacje; }
 		public getSamolot() { return this.Samolot; }
 		public getTrasa() { return this.Trasa; }
@@ -20,13 +20,13 @@ namespace LiniaLotnicza
 			//Metoda przechodzi przez cala liste rezerwacji i porownuje rezerwacje.
 			foreach (Rezerwacja re in Rezerwacje)
 			{
-				if (porownanieRezerwacji(r, re))
+				if (porownajRezerwacje(r, re))
 					Rezerwacje.Remove(re);
 			}
 		}
 
 		//Metoda porownanieRezerwacji wywoluje porownanie klientow
-		private bool porownanieRezerwacji(Rezerwacja r, Rezerwacja re)
+		private bool porownajRezerwacje(Rezerwacja r, Rezerwacja re)
 		{
 			Klient k = r.getKlient(), kl = re.getKlient();
 			return (k.porownanie(kl));

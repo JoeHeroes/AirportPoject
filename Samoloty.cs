@@ -5,7 +5,7 @@ namespace LiniaLotnicza
 	{
 		protected double Zasieg;
 		protected string Id;
-		protected int LiczbaMiejsc
+		protected int LiczbaMiejsc;
 	public Samolot(double zasieg, string id, int liczbamiejsc) {
 			if (zasieg <= 0)
 				throw new ZasiegException("Zasieg nie moze byc mniejszy od zera.");
@@ -14,8 +14,19 @@ namespace LiniaLotnicza
 			this.Zasieg = zasieg;
 			this.Id = id;
 			this.LiczbaMiejsc = liczbamiejsc; }
+		public Samolot(Samolot s)
+        {
+			this.Zasieg = s.getZasieg();
+			this.Id = s.getId();
+			this.LiczbaMiejsc = s.getLiczbaMiejsc();
+        }
 		public double getZasieg() { return this.Zasieg; }
 		public string getId(){return this.Id; }
+		public int getLiczbaMiejsc() { return this.LiczbaMiejsc; }
+		public bool porownajSamolot(Samolot s)
+        {
+			return (this.Id == s.getId() && this.Zasieg == s.getZasieg() && this.LiczbaMiejsc == s.getLiczbaMiejsc());
+		}
 }
 	public class Dlugodystansowy : Samolot
 	{
