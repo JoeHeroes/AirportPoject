@@ -17,15 +17,19 @@ namespace LiniaLotnicza
 		public void dodajRezerwacje(Rezerwacja r) { Rezerwacje.Add(r); }
 		public void usunRezerwacje(Rezerwacja r)
 		{
+			//Metoda przechodzi przez cala liste rezerwacji i porownuje rezerwacje.
 			foreach (Rezerwacja re in Rezerwacje)
 			{
 				if (porownanieRezerwacji(r, re))
 					Rezerwacje.Remove(re);
 			}
 		}
+
+		//Metoda porownanieRezerwacji wywoluje porownanie klientow
 		private bool porownanieRezerwacji(Rezerwacja r, Rezerwacja re)
 		{
-			return (porownanieKlientow(r.getKlient(), re.getKlient());
+			Klient k = r.getKlient(), kl = re.getKlient();
+			return (k.porownanie(kl));
 		}
 		public DateTime getDataLotu(){return this.DataLotu; }
 	}
