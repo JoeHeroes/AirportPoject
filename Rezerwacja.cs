@@ -9,7 +9,7 @@ namespace LiniaLotnicza
 
         Rezerwacja(Klient k)
         {
-            this.Klient = k;
+            this.Klient = new Klient(k);
             this.Bilety = new ArrayList();
         }
         public Klient getKlient()
