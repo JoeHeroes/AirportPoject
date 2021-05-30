@@ -25,10 +25,7 @@ namespace LiniaLotnicza
 			this.Dystans = t.getDystans();
 			this.Czas = t.getCzas();
 			List<Lotnisko> l = t.getLotniska();
-			for (int i = 0; i < l.Count; i++)
-			{
-				this.Lotniska.Add(new Lotnisko(l[i]));
-			}
+			this.Lotniska = new List<Lotnisko>(t.getLotniska());
 
 		}
 		public double getDystans() { return this.Dystans; }

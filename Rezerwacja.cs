@@ -19,11 +19,7 @@ namespace LiniaLotnicza
         public Rezerwacja(Rezerwacja r)
         {
             this.Klient = new Klient(r.getKlient());
-            List<Bilet> b = r.getBilety();
-            for (int i = 0; i < b.Count; i++)
-            {
-                this.Bilety.Add(new Bilet(b[i]));
-            }
+            this.Bilety = new List<Bilet>(r.getBilety());
         }
         public Klient getKlient()
         {
