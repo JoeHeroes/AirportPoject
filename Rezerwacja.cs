@@ -4,20 +4,20 @@ namespace LiniaLotnicza
 {
     public class Rezerwacja
     {
-        private Klient Klient;
+        private Klient klient;
         private List<Bilet> Bilety;
         public Rezerwacja() { }
 
         //Zwykly konstruktor
         public Rezerwacja(Klient k)
         {
-            this.Klient = new Klient(k);
+            this.klient = new Klient(k);
             this.Bilety = new List<Bilet>();
         }
 
         public Klient getKlient()
         {
-            return Klient;
+            return klient;
         }
         public List<Bilet> getBilety()
         {
@@ -50,7 +50,7 @@ namespace LiniaLotnicza
                 List<Bilet> b = r.getBilety();     // Sprawdzenie czy listy
                 if (b.Count != this.Bilety.Count)     // posiadaja taka sama
                     return false;                       // liczbe elementow.
-                if (this.Klient.Equals(r.getKlient()) && porownajBilety(r))
+                if (this.klient.Equals(r.getKlient()) && porownajBilety(r))
                     return true;
                 else
                     return false;
