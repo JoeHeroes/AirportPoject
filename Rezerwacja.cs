@@ -15,12 +15,6 @@ namespace LiniaLotnicza
             this.Bilety = new List<Bilet>();
         }
 
-        // Konstruktor kopiujacy - tworzy nowa liste biletow i przekopiowuje z niej bilety do listy biletow rezerwacji.
-        public Rezerwacja(Rezerwacja r)
-        {
-            this.Klient = new Klient(r.getKlient());
-            this.Bilety = new List<Bilet>(r.getBilety());
-        }
         public Klient getKlient()
         {
             return Klient;
@@ -38,21 +32,29 @@ namespace LiniaLotnicza
             //Metoda przeglada cala liste biletow i porownuje pola obiektow poprzez metode porownajBilet, a nastepnie usuwa poszczegolne bilety.
             for (int i = 0; i < this.Bilety.Count; i++)
             {
-                if (b.porownajBilet(this.Bilety[i]))
+                if (b.Equals(this.Bilety[i]))
                     Bilety.RemoveAt(i);
             }
         }
 
-        // Metoda porownajRezerwacje porownuje poszczegolne pola i wywoluje prywatna metode porownajBilety ktora porownuje listy biletow i zwraca true jezeli listy sa takie same
-        public bool porownajRezerwacje(Rezerwacja r)
+        // Metoda Equals porownuje poszczegolne pola i wywoluje prywatna metode porownajBilety ktora porownuje listy biletow i zwraca true jezeli listy sa takie same
+        public override bool Equals(Object obj)
         {
-            List<Bilet> b = r.getBilety();     // Sprawdzenie czy listy
-            if (b.Count != this.Bilety.Count)     // posiadaja taka sama
-                return false;						// liczbe elementow.
-            if (this.Klient.porownajKlienta(r.getKlient()) && porownajBilety(r))
-                return true;
-            else
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
                 return false;
+            }
+            else
+            {
+                Rezerwacja r = (Rezerwacja)obj;
+                List<Bilet> b = r.getBilety();     // Sprawdzenie czy listy
+                if (b.Count != this.Bilety.Count)     // posiadaja taka sama
+                    return false;                       // liczbe elementow.
+                if (this.Klient.Equals(r.getKlient()) && porownajBilety(r))
+                    return true;
+                else
+                    return false;
+            }
         }
         private bool porownajBilety(Rezerwacja r)
         {
@@ -60,7 +62,7 @@ namespace LiniaLotnicza
             bool zmienna = false;
             for (int i = 0; i < b.Count; i++)
             {
-                if (b[i].porownajBilet(new Bilet(this.Bilety[i])))
+                if (b[i].Equals(this.Bilety[i]))
                         zmienna = true;
                 else
                     return false;
@@ -68,39 +70,41 @@ namespace LiniaLotnicza
             return zmienna;
         }
     }
-    public class Bilet
-    {
-        private string MiejsceDocelowe;
-        private DateTime DataLotu;
-        public Bilet() { }
-        public Bilet(string MDocelowe,int r, int m, int d, int g, int mi, int s)
+        public class Bilet
         {
-            this.MiejsceDocelowe = MDocelowe;
-            this.DataLotu = new DateTime(r, m, d, g, m, s);
-        }
-        public Bilet(string MDocelowe,DateTime data)
-        {
-            this.MiejsceDocelowe = MDocelowe;
-            this.DataLotu = data;
-        }
-        public Bilet(Bilet bil)
-        {
-            this.MiejsceDocelowe = bil.getMiejsceDocelowe();
-            this.DataLotu = bil.getData();
-        }
+            private string MiejsceDocelowe;
+            private DateTime DataLotu;
+            public Bilet() { }
+            public Bilet(string MDocelowe, int r, int m, int d, int g, int mi, int s)
+            {
+                this.MiejsceDocelowe = MDocelowe;
+                this.DataLotu = new DateTime(r, m, d, g, m, s);
+            }
+            public Bilet(string MDocelowe, DateTime data)
+            {
+                this.MiejsceDocelowe = MDocelowe;
+                this.DataLotu = data;
+            }
+            public string getMiejsceDocelowe()
+            {
+                return this.MiejsceDocelowe;
+            }
+            public DateTime getData()
+            {
+                return this.DataLotu;
+            }
+            public override bool Equals(Object obj)
+            {
+                if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+                {
+                    return false;
+                }
+                else
+                {
+                    Bilet bil = (Bilet)obj;
+                    return (this.DataLotu == bil.getData() && this.MiejsceDocelowe == bil.getMiejsceDocelowe());
+                }
 
-        public string getMiejsceDocelowe()
-        {
-            return this.MiejsceDocelowe;
+            }
         }
-        public DateTime getData()
-        {
-            return this.DataLotu;
-        }
-        public bool porownajBilet(Bilet bil)
-        {
-            return (this.DataLotu == bil.getData() && this.MiejsceDocelowe == bil.getMiejsceDocelowe());
-        }
-        
-    }
 }
