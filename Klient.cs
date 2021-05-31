@@ -5,6 +5,7 @@ namespace LiniaLotnicza
 	{
 		public Klient()
 		{
+			//test
 		}
 	}
 }
