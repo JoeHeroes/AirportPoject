@@ -6,24 +6,19 @@ namespace LiniaLotnicza
 	{
 		private double Dystans;
 		private List<Lotnisko> Lotniska;
-		private int Czas;
 		public Trasa() { }
 
 		// Zwykly konstruktor
-		public Trasa(double dystans, int czas)
+		public Trasa(double dystans)
 		{
-			if (czas <= 0)
-				throw new CzasException();
 			if (dystans <= 0)
 				throw new DystansException();
 			this.Dystans = dystans;
-			this.Czas = czas;
 			Lotniska = new List<Lotnisko>();
 		}
 
 		public double getDystans() { return this.Dystans; }
 		public List<Lotnisko> getLotniska() { return this.Lotniska; }
-		public int getCzas() { return this.Czas; }
 		public void dodajLotnisko(Lotnisko L) { Lotniska.Add(L); }
 		public void usunLotnisko(Lotnisko L)
 		{
@@ -49,7 +44,7 @@ namespace LiniaLotnicza
 				if (l.Count != this.Lotniska.Count)     // posiadaja taka sama
 					return false;                       // liczbe elementow.
 
-				if (this.Dystans == t.getDystans() && this.Czas == t.getCzas() && porownajLotniska(t))
+				if (this.Dystans == t.getDystans() && porownajLotniska(t))
 					return true;
 				else
 					return false;
@@ -92,6 +87,5 @@ namespace LiniaLotnicza
 	}
 		public class TrasaException : Exception { }
 		public class DystansException : TrasaException { }
-		public class CzasException : TrasaException { }
 	
 }

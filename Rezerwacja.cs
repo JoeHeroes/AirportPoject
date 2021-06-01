@@ -70,29 +70,36 @@ namespace LiniaLotnicza
             return zmienna;
         }
     }
-        public class Bilet
+    public class Bilet
         {
             private string MiejsceDocelowe;
-            private DateTime DataLotu;
+            private DateTime dataPocz;
+            private DateTime dataKon;
             public Bilet() { }
-            public Bilet(string MDocelowe, int r, int m, int d, int g, int mi, int s)
+            public Bilet(string MDocelowe, int r1, int m1, int d1, int g1, int mi1,int r2,int m2, int d2, int g2, int mi2)
             {
                 this.MiejsceDocelowe = MDocelowe;
-                this.DataLotu = new DateTime(r, m, d, g, m, s);
+                this.dataPocz = new DateTime(r1, m1, d1, g1, m1, 0);
+                this.dataKon = new DateTime(r2, m2, d2, g2, m2, 0);
             }
-            public Bilet(string MDocelowe, DateTime data)
+            public Bilet(string MDocelowe, DateTime data1,DateTime data2)
             {
                 this.MiejsceDocelowe = MDocelowe;
-                this.DataLotu = data;
+                this.dataPocz = data1;
+            this.dataKon = data2;
             }
             public string getMiejsceDocelowe()
             {
                 return this.MiejsceDocelowe;
             }
-            public DateTime getData()
+            public DateTime getDataPocz()
             {
-                return this.DataLotu;
+                return this.dataPocz;
             }
+        public DateTime getDataKon()
+        {
+            return this.dataKon;
+        }
             public override bool Equals(Object obj)
             {
                 if ((obj == null) || !this.GetType().Equals(obj.GetType()))
@@ -102,7 +109,7 @@ namespace LiniaLotnicza
                 else
                 {
                     Bilet bil = (Bilet)obj;
-                    return (this.DataLotu == bil.getData() && this.MiejsceDocelowe == bil.getMiejsceDocelowe());
+                    return (this.dataPocz == bil.getDataPocz() && this.dataKon == bil.getDataKon() && this.MiejsceDocelowe == bil.getMiejsceDocelowe());
                 }
 
             }

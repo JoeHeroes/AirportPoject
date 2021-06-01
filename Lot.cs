@@ -8,12 +8,19 @@ namespace LiniaLotnicza
 		private List<Rezerwacja> Rezerwacje;
 		private Samolot samolot;
 		private Trasa trasa;
-		private DateTime DataLotu;
+		private DateTime dataPocz;
+		private DateTime dataKon;
 		public Lot() { }
 
 		//Zwykly konstruktor
-		public Lot(Samolot s, Trasa t, DateTime data)
-		{ this.DataLotu = data; this.trasa = t; this.samolot = s; Rezerwacje = new List<Rezerwacja>(); }
+		public Lot(Samolot s, Trasa t, DateTime dataPo, DateTime dataKo)
+		{ if (dataPo > dataKo)
+				throw new DataException();
+			else
+			{
+				this.dataPocz = dataPo; this.dataKon = dataKo; this.trasa = t; this.samolot = s; Rezerwacje = new List<Rezerwacja>();
+			}
+		}
 
 		public List<Rezerwacja> getRezerwacje() { return this.Rezerwacje; }
 		public Samolot getSamolot() { return this.samolot; }
@@ -43,7 +50,7 @@ namespace LiniaLotnicza
 				if (rez.Count != this.Rezerwacje.Count)                 // posiadaja taka sama
 					return false;                                      // liczbe elementow.
 
-				if (this.samolot.Equals(lot.getSamolot()) && this.trasa.Equals(lot.getTrasa()) && this.DataLotu == lot.getDataLotu() && porownajRezerwacje(lot))
+				if (this.samolot.Equals(lot.getSamolot()) && this.trasa.Equals(lot.getTrasa()) && this.dataPocz == lot.getDataPocz() && this.dataKon == lot.getDataKon() && porownajRezerwacje(lot))
 					return true;
 				else
 					return false;
@@ -62,6 +69,9 @@ namespace LiniaLotnicza
 			}
 			return zmienna;
 		}
-		public DateTime getDataLotu(){return this.DataLotu; }
+		public DateTime getDataPocz() { return this.dataPocz; }
+		public DateTime getDataKon() { return this.dataKon; }
 	}
+	public class LotException : Exception { }
+	public class DataException : LotException { }
 }
