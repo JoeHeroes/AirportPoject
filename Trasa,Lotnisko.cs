@@ -12,7 +12,7 @@ namespace LiniaLotnicza
 		public Trasa(double dystans)
 		{
 			if (dystans <= 0)
-				throw new DystansException();
+				throw new DystansException("Dystans nie moze byc mniejszy od zera.");
 			this.Dystans = dystans;
 			Lotniska = new List<Lotnisko>();
 		}
@@ -85,7 +85,13 @@ namespace LiniaLotnicza
 			}
 		}
 	}
-		public class TrasaException : Exception { }
-		public class DystansException : TrasaException { }
+	public class TrasaException : Exception 
+	{
+		public TrasaException(string msg) : base(msg) { }
+	}
+	public class DystansException : TrasaException 
+	{
+		public DystansException(string msg) : base(msg) { }
+	}
 	
 }

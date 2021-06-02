@@ -15,7 +15,7 @@ namespace LiniaLotnicza
 		//Zwykly konstruktor
 		public Lot(Samolot s, Trasa t, DateTime dataPo, DateTime dataKo)
 		{ if (dataPo > dataKo)
-				throw new DataException();
+				throw new DataException("Data konca lotu nie może być wcześniejsza od daty początku.");
 			else
 			{
 				this.dataPocz = dataPo; this.dataKon = dataKo; this.trasa = t; this.samolot = s; Rezerwacje = new List<Rezerwacja>();
@@ -72,6 +72,12 @@ namespace LiniaLotnicza
 		public DateTime getDataPocz() { return this.dataPocz; }
 		public DateTime getDataKon() { return this.dataKon; }
 	}
-	public class LotException : Exception { }
-	public class DataException : LotException { }
+	public class LotException : Exception 
+	{
+		public LotException(string msg) : base(msg) { }
+	}
+	public class DataException : LotException 
+	{
+		public DataException(string msg) : base(msg) { }
+	}
 }
