@@ -11,7 +11,7 @@ namespace LiniaLotnicza
         //Zwykly konstruktor
         public Rezerwacja(Klient k)
         {
-            this.klient = new Klient(k);
+            this.klient = k;
             this.Bilety = new List<Bilet>();
         }
 
