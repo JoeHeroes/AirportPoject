@@ -86,7 +86,7 @@ namespace LiniaLotnicza
             {
                 this.MiejsceDocelowe = MDocelowe;
                 this.dataPocz = data1;
-            this.dataKon = data2;
+                this.dataKon = data2;
             }
             public string getMiejsceDocelowe()
             {
@@ -96,10 +96,10 @@ namespace LiniaLotnicza
             {
                 return this.dataPocz;
             }
-        public DateTime getDataKon()
-        {
-            return this.dataKon;
-        }
+            public DateTime getDataKon()
+            {
+                return this.dataKon;
+            }
             public override bool Equals(Object obj)
             {
                 if ((obj == null) || !this.GetType().Equals(obj.GetType()))
