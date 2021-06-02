@@ -9,6 +9,7 @@ namespace LiniaLotnicza
 		private List<Lot> loty;
 		private List<Trasa> trasy;
 		private List<Klient> klienci;
+		private List<Lotnisko> lotniska;
 
 		//Konstruktor
 		public LiniaLotnicza(string nazwa)
@@ -18,6 +19,7 @@ namespace LiniaLotnicza
 			loty = new List<Lot>();
 			trasy = new List<Trasa>();
 			klienci = new List<Klient>();
+			lotniska = new List<Lotnisko>();
 		}
 
 		//gettery
@@ -26,6 +28,7 @@ namespace LiniaLotnicza
 		public List<Samolot> getSamoloty() { return this.samoloty; }
 		public List<Trasa> getTrasy() { return this.trasy; }
 		public List<Klient> getKlient() { return this.klienci; }
+		public List<Lotnisko> getLotnisko() { return this.lotniska; }
 
 		//dodawanie do list
 		public void dodajSamolot(Samolot s)
@@ -66,8 +69,207 @@ namespace LiniaLotnicza
 			loty.Add(l);
 		}
 
+		public void dodajLotnisko(Lotnisko l)
+		{
+			for (int i = 0; i < lotniska.Count; i++)
+			{
+				if (l.Equals(lotniska[i]))
+					throw new ListaException("Wybrane lotnisko zostalo juz dodane.");
+			}
+			lotniska.Add(l);
+		}
 
+		//Usuwanie Samolotu z listy
+		public void usunSamolot(Samolot s)
+		{
+			//Metoda porownanieSamolotSamoloty sprawdza czy dany samolot wystepuje na liscie samolotow.
+			//Metoda zwraca true jezeli samolot wystepuje oraz false gdy nie wystepuje.
+			if (!porownanieSamolotSamoloty(s))
+				throw new UsunException("Dany samolot nie wystepuje na liscie.");
+
+			//Metoda porownanieSamolotLoty sprawdza czy dany samolot posiada przypisane pewne loty.
+			//Metoda zwraca true jezeli samolot posiada przypisane loty.
+			if (porownanieSamolotLoty(s))
+				throw new UsunException("Dany samolot ma przypisane loty. Nie mozna usunac.");
+			samoloty.Remove(s);
+		}
+		private bool porownanieSamolotSamoloty(Samolot s)
+		{
+			for (int i = 0; i < this.samoloty.Count; i++)
+			{
+				if (s.Equals(samoloty[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool porownanieSamolotLoty(Samolot s)
+		{
+			for (int i = 0; i < this.loty.Count; i++)
+			{
+				if (s.Equals(loty[i].getSamolot()))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		//Usuwanie trasy z listy
+		public void usunTrase(Trasa t)
+		{
+			//Metoda porownanieTrasaTrasy sprawdza czy dana trasa wystepuje na liscie tras.
+			//Metoda zwraca true jezeli trasa wystepuje oraz false gdy nie wystepuje.
+			if (!porownanieTrasaTrasy(t))
+				throw new UsunException("Dana trasa nie wystepuje na liscie.");
+
+			//Metoda porownanieTrasaLoty sprawdza czy dana trasa posiada przypisane pewne loty.
+			//Metoda zwraca true jezeli trasa posiada przypisane loty.
+			if (porownanieTrasaLoty(t))
+				throw new UsunException("Dana trasa ma przypisane loty. Nie mozna usunac.");
+			trasy.Remove(t);
+		}
+		private bool porownanieTrasaTrasy(Trasa t)
+		{
+			for (int i = 0; i < this.trasy.Count; i++)
+			{
+				if (t.Equals(trasy[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool porownanieTrasaLoty(Trasa t)
+		{
+			for (int i = 0; i < this.loty.Count; i++)
+			{
+				if (t.Equals(loty[i].getTrasa()))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		//Usuwanie klienta z listy
+		public void usunKlienta(Klient k)
+		{
+			//Metoda porownanieKlientKlienci sprawdza czy dany klient wystepuje na liscie klientow.
+			//Metoda zwraca true jezeli klient wystepuje oraz false gdy nie wystepuje.
+			if (!porownanieKlientKlienci(k))
+				throw new UsunException("Dany klient nie wystepuje na liscie.");
+			//Metoda porownanieKlientRezerwacje sprawdza czy dany klient posiada rezerwacje dla wszystkich lotow.
+			//Metoda zwraca true jezeli klient posiada rezerwacje oraz false jezeli ich nie posiada.
+			if (porownanieKlientRezerwacje(k))
+				throw new UsunException("Dany klient posiada rezerwacje. Nie mozna usunac.");
+			klienci.Remove(k);
+
+		}
+
+		private bool porownanieKlientKlienci(Klient k)
+		{
+			for (int i = 0; i < this.klienci.Count; i++)
+			{
+				if (k.Equals(klienci[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool porownanieKlientRezerwacje(Klient k)
+		{
+			for (int i = 0; i < this.loty.Count; i++)
+			{
+				List<Rezerwacja> rezerwacje = loty[i].getRezerwacje();
+				for(int j=0;j<rezerwacje.Count;j++)
+                {
+					if (k.Equals(rezerwacje[j].getKlient()))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		//Usuwanie lotow
+		public void usunLot(Lot l)
+		{
+			//Metoda porownanieLotLoty sprawdza czy dany loy wystepuje na liscie lotow.
+			//Metoda zwraca true jezeli lot wystepuje oraz false gdy nie wystepuje.
+			if (!porownanieLotLoty(l))
+				throw new UsunException("Dany lot nie wystepuje na liscie.");
+			if (l.getRezerwacje().Count == 0)
+				loty.Remove(l);
+			else
+				throw new UsunException("Dany lot posiada przypisane rezerwacje. Nie mozna usunac.");
+		}
+		private bool porownanieLotLoty(Lot l)
+		{
+			for (int i = 0; i < this.loty.Count; i++)
+			{
+				if (l.Equals(loty[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		//Usuwanie lotnisk
+		public void usunLotnisko(Lotnisko l)
+		{
+			//Metoda porownanieLotniskoLotniska sprawdza czy dane lotnisko wystepuje na liscie lotnisk.
+			//Metoda zwraca true jezeli lotnisko wystepuje oraz false gdy nie wystepuje.
+			if (!porownanieLotniskoLotniska(l))
+				throw new UsunException("Dane lotnisko nie wystepuje na liscie.");
+
+			//Metoda porownanieLotniskoTrasy sprawdza czy dane lotnisko posiada przypisane pewne trasy.
+			//Metoda zwraca true jezeli lotnisko posiada przypisane trasy.
+			if (porownanieLotniskoTrasy(l))
+				throw new UsunException("Dane lotnisko ma przypisane trasy. Nie mozna usunac.");
+			lotniska.Remove(l);
+		}
+	private bool porownanieLotniskoLotniska(Lotnisko l)
+	{
+		for (int i = 0; i < this.lotniska.Count; i++)
+		{
+			if (l.Equals(lotniska[i]))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
+
+	private bool porownanieLotniskoTrasy(Lotnisko l)
+	{
+			for (int i = 0; i < this.trasy.Count; i++)
+			{
+				List<Lotnisko> lotniska = trasy[i].getLotniska();
+				for (int j = 0; j < lotniska.Count; j++)
+				{
+					if (l.Equals(lotniska[j]))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+	}
+
+
+
+
+}
+
+
+
 	public class LiniaLotniczaException : Exception
 	{
 		public LiniaLotniczaException(string msg) : base(msg) { }
@@ -75,6 +277,10 @@ namespace LiniaLotnicza
 	public class ListaException : LiniaLotniczaException
 	{
 		public ListaException(string msg) : base(msg) { }
+	}
+	public class UsunException : LiniaLotniczaException
+    {
+		public UsunException(string msg) : base(msg) { }
 	}
 
 }
