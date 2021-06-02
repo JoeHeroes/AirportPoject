@@ -9,9 +9,9 @@ namespace LiniaLotnicza
 		public Samolot() { }
 		public Samolot(double zasieg, string id, int liczbamiejsc) {
 			if (zasieg <= 0)
-				throw new ZasiegException();
+				throw new ZasiegException("Zasieg nie moze byc mniejszy od zera.");
 			if (liczbamiejsc <= 0)
-				throw new LiczbaMiejscException();
+				throw new LiczbaMiejscException("Liczba miejsc nie moze byc mniejsza od zera.");
 			this.Zasieg = zasieg;
 			this.Id = id;
 			this.LiczbaMiejsc = liczbamiejsc; }
@@ -49,9 +49,18 @@ namespace LiniaLotnicza
 		{
 		}
 	}
-	public class SamolotException : Exception { }
-	public class ZasiegException : SamolotException { }
-	public class LiczbaMiejscException : SamolotException { }
+	public class SamolotException : Exception 
+	{
+		public SamolotException(string msg) : base(msg) { }
+	}
+	public class ZasiegException : SamolotException 
+	{
+		public ZasiegException(string msg) : base(msg) { }
+	}
+	public class LiczbaMiejscException : SamolotException 
+	{
+		public LiczbaMiejscException(string msg) : base(msg) { }
+	}
 
 }
 
