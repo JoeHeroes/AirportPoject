@@ -77,7 +77,7 @@ namespace LiniaLotnicza
 			else
 			{
 				PosrednikFirmy pf = (PosrednikFirmy)obj;
-				return (this.Id == i.getId() && this.NazwaFirmy == pf.getNazwaFirmy());  
+				return (this.Id == pf.getId() && this.NazwaFirmy == pf.getNazwaFirmy());  
 
 			}
 		}
