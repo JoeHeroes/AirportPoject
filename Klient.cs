@@ -52,7 +52,7 @@ namespace LiniaLotnicza
 			else
 			{
 				Indywidualny i = (Indywidualny)obj;
-				return (this.Imie == i.getImie() && this.Nazwisko == i.getNazwisko() && this.Wiek == i.getWiek()); 
+				return (this.Id == i.getId() && this.Imie == i.getImie() && this.Nazwisko == i.getNazwisko() && this.Wiek == i.getWiek()); 
 			}
 		}
 	}
@@ -77,7 +77,7 @@ namespace LiniaLotnicza
 			else
 			{
 				PosrednikFirmy pf = (PosrednikFirmy)obj;
-				return (this.NazwaFirmy == pf.getNazwaFirmy());  
+				return (this.Id == i.getId() && this.NazwaFirmy == pf.getNazwaFirmy());  
 
 			}
 		}
