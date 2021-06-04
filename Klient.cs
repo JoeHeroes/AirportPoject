@@ -52,7 +52,7 @@ namespace LiniaLotnicza
 			else
 			{
 				Indywidualny i = (Indywidualny)obj;
-				return (this.Imie == i.getImie() && this.Nazwisko == i.getNazwisko() && this.Wiek == i.getWiek());  ///Nie wiem co tutaj jest źle -> do poprawy jak ktoś wie, jeśli jest coś źle
+				return (this.Imie == i.getImie() && this.Nazwisko == i.getNazwisko() && this.Wiek == i.getWiek()); 
 			}
 		}
 	}
@@ -77,7 +77,7 @@ namespace LiniaLotnicza
 			else
 			{
 				PosrednikFirmy pf = (PosrednikFirmy)obj;
-				return (this.NazwaFirmy == pf.getNazwaFirmy());  ///Nie wiem co tutaj jest źle -> do poprawy jak ktoś wie
+				return (this.NazwaFirmy == pf.getNazwaFirmy());  
 
 			}
 		}
