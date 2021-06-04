@@ -7,8 +7,6 @@ namespace LiniaLotnicza
 		public Klient() { }
 		public Klient(string id)
 		{
-			if (id <= 0)
-				throw new IdException("Id nie może byc mniejsze równe 0.");
 			this.Id = id;
 		}
 		public string getId() { return this.Id; }
@@ -32,10 +30,11 @@ namespace LiniaLotnicza
 		public string Narodowosc;
 		public int Wiek;
 		public Indywidualny() { }
-		public Indywidualny(string imie, string nazwisko, string narodowosc, int wiek) : base(id)
+		public Indywidualny(string id,string imie, string nazwisko, string narodowosc, int wiek) : base(id)
 		{
 			if (wiek < 0)
 				throw new WiekException("Wiek nie może być ujemny.");
+			this.Id = id;
 			this.Imie = imie;
 			this.Nazwisko = nazwisko;
 			this.Narodowosc = narodowosc;
@@ -53,7 +52,7 @@ namespace LiniaLotnicza
 			else
 			{
 				Indywidualny i = (Indywidualny)obj;
-				return (this.Imie == i.getImie() && this.getNazwisko == i.getNazwisko(), this.getWiek == i.getWiek());  ///Nie wiem co tutaj jest źle -> do poprawy jak ktoś wie, jeśli jest coś źle
+				return (this.Imie == i.getImie() && this.Nazwisko == i.getNazwisko() && this.Wiek == i.getWiek());  ///Nie wiem co tutaj jest źle -> do poprawy jak ktoś wie, jeśli jest coś źle
 			}
 		}
 	}
@@ -63,11 +62,12 @@ namespace LiniaLotnicza
 	{
 		public string NazwaFirmy;
 		public PosrednikFirmy() { }
-		public PosrednikFirmy(string nazwafirmy) : base(id)
+		public PosrednikFirmy(string id,string nazwafirmy) : base(id)
 		{
+			this.Id = id;
 			this.NazwaFirmy = nazwafirmy;
 		}
-        public string getNazwaFirmy() { return.NazwaFirmy; }
+        public string getNazwaFirmy() { return this.NazwaFirmy; }
 		public override bool Equals(Object obj)
 		{
 			if ((obj == null) || !this.GetType().Equals(obj.GetType()))
@@ -85,10 +85,6 @@ namespace LiniaLotnicza
 	public class KlientException : Exception
 	{
 		public KlientException(string msg) : base(msg) { }
-	}
-	public class IdException : KlientException
-	{
-		public IdException(string msg) : base(msg) { }
 	}
     public class WiekException : KlientException
 	{
