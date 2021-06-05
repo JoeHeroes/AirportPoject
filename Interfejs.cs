@@ -9,7 +9,7 @@ namespace Interfejs
 		static void Main(string[] args)
 		{
 
-			LiniaLotnicza LiniaL = new LiniaLotnicza("Lot by KGMDKG 2020C");
+			LiniaLotnicza LiniaL = new LiniaLotnicza("Lot");
 
 			Regionalny samolotR = new Regionalny(100, "99823", 23);
 			LiniaL.dodajSamolot(samolotR);
