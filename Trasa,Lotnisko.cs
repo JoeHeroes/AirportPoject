@@ -72,7 +72,7 @@ namespace LiniaLotnicza
 		public string getKraj() { return this.Kraj; }
 		public string getMiasto() { return this.Miasto; }
 		public string getId() { return this.Id; }
-		public bool Equals(Object obj)
+		public override bool Equals(Object obj)
 		{
 			if ((obj == null) || !this.GetType().Equals(obj.GetType()))
 			{
