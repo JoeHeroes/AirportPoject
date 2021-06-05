@@ -25,10 +25,10 @@ namespace LiniaLotnicza
 	}
 	public class Indywidualny : Klient
 	{
-		public string Imie;
-		public string Nazwisko;
-		public string Narodowosc;
-		public int Wiek;
+		private string Imie;
+		private string Nazwisko;
+		private string Narodowosc;
+		private int Wiek;
 		public Indywidualny() { }
 		public Indywidualny(string id,string imie, string nazwisko, string narodowosc, int wiek) : base(id)
 		{
@@ -60,7 +60,7 @@ namespace LiniaLotnicza
 	
 	public class PosrednikFirmy : Klient
 	{
-		public string NazwaFirmy;
+		private string NazwaFirmy;
 		public PosrednikFirmy() { }
 		public PosrednikFirmy(string id,string nazwafirmy) : base(id)
 		{
