@@ -28,7 +28,7 @@ namespace LiniaLotnicza
 		public List<Samolot> getSamoloty() { return this.samoloty; }
 		public List<Trasa> getTrasy() { return this.trasy; }
 		public List<Klient> getKlient() { return this.klienci; }
-		public List<Lotnisko> getLotnisko() { return this.lotniska; }
+		public List<Lotnisko> getLotniska() { return this.lotniska; }
 
 		//dodawanie do list
 		public void dodajSamolot(Samolot s)
