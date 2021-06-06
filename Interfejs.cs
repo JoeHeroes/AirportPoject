@@ -12,11 +12,11 @@ namespace Interfejs
 			LiniaLotnicza LiniaL = new LiniaLotnicza("Lot");
 
 			Console.WriteLine("");
-			Console.WriteLine("		   Witamy w system kontroli lotow");
+			Console.WriteLine("		   Witamy w systemie kontroli lotow");
 			Console.WriteLine("");
 			Console.WriteLine("				Autorzy: ");
-			Console.WriteLine("			- Micha³ Dienisik ");
-			Console.WriteLine("			- Kornel Go³ebiewski");
+			Console.WriteLine("			- Michal Dienisik ");
+			Console.WriteLine("			- Kornel Golebiewski");
 			Console.WriteLine("			- Krzyszytof Goral");
 			Console.WriteLine("");
 			Console.WriteLine("");
@@ -98,7 +98,7 @@ namespace Interfejs
 						{
 							case 1:
 								Console.WriteLine("");
-								Console.WriteLine("			Witaj w system rezerwacji blitw");
+								Console.WriteLine("			Witaj w system rezerwacji biletow");
 
 								Klient K = TworzenieKlienta();
 								Rezerwacja R = new Rezerwacja(K);
@@ -152,6 +152,7 @@ namespace Interfejs
 		public static void WyswietTrasaJedna(Lot l)
 		{
 			Trasa t = l.getTrasa();
+			Console.WriteLine("			Id: " + t.getId());
 			WyswietLotniskaAll(t);
 		}
 		public static void WyswietTrasa(LiniaLotnicza LiniaL)
@@ -160,7 +161,8 @@ namespace Interfejs
 			Console.WriteLine("			Trasy: ");
 			foreach (Trasa T in LiniaL.getTrasy())
 			{
-				Console.WriteLine("			" + T.getDystans());
+				Console.WriteLine("			Id: " + T.getId());
+				Console.WriteLine("			Dystans:" + T.getDystans());
 				WyswietLotniskaAll(T);
 			}
 			Console.ReadKey();
@@ -194,7 +196,9 @@ namespace Interfejs
 			foreach (Samolot S in LiniaL.getSamoloty())
 			{
 
-				Console.WriteLine("			" + S.getId());
+				Console.WriteLine("			Id: " + S.getId());
+				Console.WriteLine("			Zasieg: " + S.getZasieg());
+				Console.WriteLine("			LiczbaMiejsc: " + S.getLiczbaMiejsc() + "\n");
 			}
 			Console.ReadKey();
 		}
@@ -220,7 +224,7 @@ namespace Interfejs
 				case 1:
 					foreach (Indywidualny I in LiniaL.getKlient())
 					{
-						Console.WriteLine("			" + I.getId() + " " + I.getImie() + " " + I.getNazwisko() + " " + I.getWiek() + " " + I.Narodowosc);
+						Console.WriteLine("			" + I.getId() + " " + I.getImie() + " " + I.getNazwisko() + " " + I.getWiek() + " " + I.getNarodowosc());
 					}
 					break;
 				case 2:
@@ -259,13 +263,14 @@ namespace Interfejs
 					break;
 				case 2:
 					Samolot s = TworzenieSamolotu();
-					LiniaL.dodajSamolot(s);
+					try { LiniaL.dodajSamolot(s); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
+			
 
 					Trasa t = DodawanieTrasa(LiniaL);
-					LiniaL.dodajTrase(t);
+					try { LiniaL.dodajTrase(t); }catch (ListaException Le) { Console.WriteLine("			" + Le.Message);};
 
 					DateTime DataP = DataOdlotu();
-					DateTime DataK = DataPrzytotu();
+					DateTime DataK = DataPrzylotu();
 
 
 					Console.WriteLine("			Podaj ID lotu");
@@ -302,11 +307,11 @@ namespace Interfejs
 					break;
 				case 2:
 					Lotnisko lAdd = TworzenieLotniska();
-					try { LiniaL.dodajLotnisko(lAdd)} catch(ListaException Le) { Console.WriteLine("			"+Le.Message)};
+					try { LiniaL.dodajLotnisko(lAdd); } catch(ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Lotnisko lDelete = TworzenieLotniska();
-					try { LiniaL.usunLotnisko(lDelete)} catch(UsunException Ue) { Console.WriteLine("			" + Ue.Message)};
+					try { LiniaL.usunLotnisko(lDelete); } catch(UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 					break;
 				case 0:
 					break;
@@ -355,11 +360,11 @@ namespace Interfejs
 					break;
 				case 2:
 					Samolot sAdd = TworzenieSamolotu();
-					LiniaL.dodajSamolot(sAdd);
+					try { LiniaL.dodajSamolot(sAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Samolot sDelete = TworzenieSamolotu();
-					LiniaL.usunSamolot(sDelete);
+					try { LiniaL.usunSamolot(sDelete); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 					break;
 				case 0:
 					break;
@@ -383,12 +388,12 @@ namespace Interfejs
 			Console.WriteLine("			Podaj Liczbe miejsc Samolotu");
 			Console.Write("			         ");
 			int miejsca = Convert.ToInt32(Console.ReadLine());
-			if (zasieg < 1000)
+			if (zasieg <= 1000)
 			{
 				Regionalny samolotR = new Regionalny(zasieg, id, miejsca);
 				return samolotR;
 			}
-			else if (zasieg < 5000)
+			else if (zasieg <= 5000)
 			{
 				Sredniodystansowy samolotS = new Sredniodystansowy(zasieg, id, miejsca);
 				return samolotS;
@@ -419,12 +424,12 @@ namespace Interfejs
 					WyswietLot(LiniaL);
 					break;
 				case 2:
-					Lot lDelete = TworzenieLotu(LiniaL);
-					LiniaL.dodajLot(lDelete);
+					Lot lAdd = TworzenieLotu(LiniaL);
+					try { LiniaL.dodajLot(lAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Lot l = TworzenieLotu(LiniaL);
-					LiniaL.usunLot(l);
+					try { LiniaL.usunLot(l); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 
 					break;
 				case 0:
@@ -455,7 +460,7 @@ namespace Interfejs
 			return new DateTime(rokOdlotu, miesieacOdlotu, dzienOdlotu, godzinaOdlotu, minutaOdlotu, 0);
 
 		}
-		public static DateTime DataPrzytotu()
+		public static DateTime DataPrzylotu()
 		{
 			Console.WriteLine("");
 			Console.WriteLine("			Podaj Date przylotu: ");
@@ -478,13 +483,13 @@ namespace Interfejs
 		public static Lot TworzenieLotu(LiniaLotnicza LL)
 		{
 			Samolot s = TworzenieSamolotu();
-			LL.dodajSamolot(s);
+			try { LL.dodajSamolot(s); } catch (ListaException Le) { };
 
 			Trasa t = DodawanieTrasa(LL);
-			LL.dodajTrase(t);
+			try { LL.dodajTrase(t); } catch (ListaException Le) { };
 
 			DateTime dataOdlotuDelete = DataOdlotu();
-			DateTime dataPrzylotuDelete = DataPrzytotu();
+			DateTime dataPrzylotuDelete = DataPrzylotu();
 
 
 			Console.WriteLine("			Podaj ID lotu");
@@ -529,23 +534,26 @@ namespace Interfejs
 			Console.WriteLine("");
 			Console.WriteLine("			Dodawanie Trasy");
 			Console.WriteLine(" ");
+			Console.WriteLine("			Podaj Id Trasy");
+			Console.Write("			         ");
+			string id = Console.ReadLine();
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
 			double dystan = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("			Dodawanie Lotnisk do trasy, by rozpoczac wcisnij dowolny przycisk procz 0");
-			Trasa Add = new Trasa(dystan);
+			Trasa Add = new Trasa(dystan,id);
 			while (true)
 			{
 				Console.Write("			         ");
 				if (Console.ReadLine() == "0")
 					break;
 				Lotnisko l = TworzenieLotniska();
-				try { LL.dodajLotnisko(l)}; catch (ListaException Le) { }
+				try { LL.dodajLotnisko(l); } catch (ListaException Le) { }
 				Add.dodajLotnisko(l);
 				Console.WriteLine("			By kontynowac dodawanie kliknij dowolny przycisk procz 0");
 				Console.WriteLine("			By zakonczyc dodawanie wcisnij 0");
 			}
-			LL.dodajTrase(Add);
+			try { LL.dodajTrase(Add); } catch (ListaException Le) { };
 			return Add;
 
 		}
@@ -555,11 +563,14 @@ namespace Interfejs
 			Console.WriteLine("");
 			Console.WriteLine("			Usuwanie Trasy");
 			Console.WriteLine(" ");
+			Console.WriteLine("			Podaj Id Trasy");
+			Console.Write("			         ");
+			string id = Console.ReadLine();
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
 			double dystan = Convert.ToDouble(Console.ReadLine());
-			Trasa Delete = new Trasa(dystan);
-			LL.usunTrase(Delete);
+			Trasa Delete = new Trasa(dystan,id);
+			try { LL.usunTrase(Delete); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 		}
 		public static void OperacjeKlient(LiniaLotnicza LiniaL)
 		{
@@ -580,11 +591,11 @@ namespace Interfejs
 					break;
 				case 2:
 					Klient kAdd = TworzenieKlienta();
-					LiniaL.dodajKlienta(kAdd);
+					try { LiniaL.dodajKlienta(kAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Klient kDelete = TworzenieKlienta();
-					LiniaL.usunKlienta(kDelete);
+					try { LiniaL.usunKlienta(kDelete); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 					break;
 				case 0:
 					break;
