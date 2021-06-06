@@ -1,8 +1,8 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Interfejs
+namespace LiniaLotnicza
 {
 	class Program
 	{
@@ -15,9 +15,9 @@ namespace Interfejs
 			Console.WriteLine("		   Witamy w systemie kontroli lotow");
 			Console.WriteLine("");
 			Console.WriteLine("				Autorzy: ");
-			Console.WriteLine("			- Michal Dienisik ");
+			Console.WriteLine("			- Michal Dzienisik ");
 			Console.WriteLine("			- Kornel Golebiewski");
-			Console.WriteLine("			- Krzyszytof Goral");
+			Console.WriteLine("			- Krzysztof Goral");
 			Console.WriteLine("");
 			Console.WriteLine("");
 			Console.WriteLine("		Przycisnij dowolny przycisk aby zaczac ...");
@@ -31,7 +31,7 @@ namespace Interfejs
 				Console.Clear();
 				Console.WriteLine("");
 				Console.WriteLine("			1. Panel Administracyjny");
-				Console.WriteLine("			2. Panel uøytkownika/goúcia");
+				Console.WriteLine("			2. Panel uzytkownika/goscia");
 				Console.WriteLine("");
 				Console.WriteLine("			0. Powrot");
 
@@ -45,11 +45,11 @@ namespace Interfejs
 						Console.Clear();
 						Console.WriteLine("");
 						Console.WriteLine("			1. Zarzadzanie  Linia Lotnicza");
-						Console.WriteLine("			2. Zarzadzanie  Lotniskami"); 
-						Console.WriteLine("			3. Zarzadzanie  Samolotami"); 
-						Console.WriteLine("			4. Zarzadzanie  Lotami"); 
-						Console.WriteLine("			5. Zarzadzanie  Trasami"); 
-						Console.WriteLine("			6. Zarzadzanie  Kientami"); 
+						Console.WriteLine("			2. Zarzadzanie  Lotniskami");
+						Console.WriteLine("			3. Zarzadzanie  Samolotami");
+						Console.WriteLine("			4. Zarzadzanie  Lotami");
+						Console.WriteLine("			5. Zarzadzanie  Trasami");
+						Console.WriteLine("			6. Zarzadzanie  Kientami");
 						Console.WriteLine("");
 						Console.WriteLine("			0. Powrot");
 
@@ -85,9 +85,9 @@ namespace Interfejs
 						Console.Clear();
 						Console.WriteLine("");
 						Console.WriteLine("			1. Rezerwuj bilet");
-						Console.WriteLine("			2. Wyúwietl liste lotow");
-						Console.WriteLine("			3. Wyúwietl liste tras");
-						Console.WriteLine("			4. Wyúwietl liste lotnisk");
+						Console.WriteLine("			2. Wy≈ìwietl liste lotow");
+						Console.WriteLine("			3. Wy≈ìwietl liste tras");
+						Console.WriteLine("			4. Wy≈ìwietl liste lotnisk");
 						Console.WriteLine("");
 						Console.WriteLine("			0. Powrot");
 
@@ -102,14 +102,12 @@ namespace Interfejs
 
 								Klient K = TworzenieKlienta();
 								Rezerwacja R = new Rezerwacja(K);
-								LiniaL.dodajKlienta(K);
-
-								//wstaw wyjatek
+								try { LiniaL.dodajKlienta(K); } catch (ListaException Le) { };
 								Console.WriteLine("");
 								Console.WriteLine("			1. Nie znasz ID lotu");
 								Console.WriteLine("			2. Znasz ID lotu");
 								int wybor = Convert.ToInt32(Console.ReadLine());
-								if(wybor==1) WyswietLot(LiniaL);
+								if (wybor == 1) WyswietLot(LiniaL);
 
 
 								Console.WriteLine("");
@@ -120,8 +118,8 @@ namespace Interfejs
 
 								Lot L = ZnajdzLotID(LiniaL, wyborID);
 
-								if (L==null) 
-                                {
+								if (L == null)
+								{
 									Console.WriteLine("			Nie wystepuje Lot o podanym ID");
 									break;
 								}
@@ -132,8 +130,8 @@ namespace Interfejs
 
 								Lotnisko LotniskoL = ZnajdzMiejsceLot(L, wyborMiasta);
 
-								if (LotniskoL==null) 
-                                {
+								if (LotniskoL == null)
+								{
 									Console.WriteLine("			Podane miasto docelowe nie znajduje sie w locie");
 									break;
 								}
@@ -141,16 +139,16 @@ namespace Interfejs
 								Console.WriteLine("			Podaj liczbe biletow, ktore chcesz zarezerwowac");
 								int liczbaB = Convert.ToInt32(Console.ReadLine());
 
-								int liczbaMiejsc = LiczbaWolnychMiejsc(Lot L);
+								int liczbaMiejsc = LiczbaWolnychMiejsc(L);
 
-								if (liczbaB> liczbaMiejsc)
+								if (liczbaB > liczbaMiejsc)
 								{
 									Console.WriteLine("			Podane liczba biletow jest wieksza niz liczba dostpnych miejsc");
 									break;
 								}
-								for(int i= 0; i<liczbaB; i++)
-                                {
-									Bilet B = new Bilet(LotniskoL, Lot.getDataPocz(), Lot.getDataKon());
+								for (int i = 0; i < liczbaB; i++)
+								{
+									Bilet B = new Bilet(LotniskoL.getMiasto(), L.getDataPocz(), L.getDataKon());
 
 									R.dodajBilet(B);
 								}
@@ -188,7 +186,7 @@ namespace Interfejs
 
 		public static int LiczbaWolnychMiejsc(Lot L)
 		{
-			List<Rezerwacja> R = L.getRezerwacja();
+			List<Rezerwacja> R = L.getRezerwacje();
 			int liczba = 0;
 			foreach (Rezerwacja Rez in R)
 			{
@@ -201,7 +199,7 @@ namespace Interfejs
 			return L.getSamolot().getLiczbaMiejsc() - liczba;
 		}
 		public static Lot ZnajdzLotID(LiniaLotnicza LiniaL, string wyborID)
-        {
+		{
 			foreach (Lot L in LiniaL.getLoty())
 			{
 				if (wyborID == L.getId())
@@ -212,7 +210,7 @@ namespace Interfejs
 			return null;
 		}
 
-		public static Lot ZnajdzMiejsceLot(Lot lot, string miasto)
+		public static Lotnisko ZnajdzMiejsceLot(Lot lot, string miasto)
 		{
 			Trasa T = lot.getTrasa();
 			foreach (Lotnisko L in T.getLotniska())
@@ -233,10 +231,10 @@ namespace Interfejs
 			Console.WriteLine("			Loty: ");
 			foreach (Lot L in LiniaL.getLoty())
 			{
-				Console.WriteLine("			 Id Lotu: " +L.getId());
+				Console.WriteLine("			 Id Lotu: " + L.getId());
 				Console.WriteLine("			 Godziny Lotu: " + L.getDataPocz() + "  " + L.getDataKon() + "  ");
 				WyswietTrasaJedna(L);
-				
+
 			}
 			Console.ReadKey();
 		}
@@ -267,7 +265,7 @@ namespace Interfejs
 
 			foreach (Lotnisko lotnisko in T.getLotniska())
 			{
-				Console.WriteLine("			 Panstwo: " + lotnisko.getKraj() + " Miasto " + lotnisko.getMiasto() + " ID: " + lotnisko.getId());
+				Console.WriteLine("			 Panstwo: " + lotnisko.getKraj() + " Miasto: " + lotnisko.getMiasto() + " ID: " + lotnisko.getId());
 			}
 
 
@@ -302,7 +300,7 @@ namespace Interfejs
 			Console.WriteLine("			  Klienci: ");
 			Console.WriteLine("");
 
-			string id = Console.ReadLine();
+
 
 			Console.WriteLine("			Typ Kientami:");
 			Console.WriteLine("			1. Indywidualny");
@@ -318,14 +316,14 @@ namespace Interfejs
 				case 1:
 					foreach (Indywidualny I in LiniaL.getKlient())
 					{
-						Console.WriteLine("			" + I.getId() + " " + I.getImie() + " " + I.getNazwisko() + " " + I.getWiek() + " " + I.getNarodowosc());
+						Console.WriteLine("			Id:" + I.getId() + " Imie:" + I.getImie() + " Nazwisko:" + I.getNazwisko() + " Wiek:" + I.getWiek() + " Narodowosc:" + I.getNarodowosc());
 					}
 					break;
 				case 2:
 
 					foreach (PosrednikFirmy P in LiniaL.getKlient())
 					{
-						Console.WriteLine("			" + P.getId() + " " + P.getNazwaFirmy());
+						Console.WriteLine("			Id:" + P.getId() + " NazwaFirmy:" + P.getNazwaFirmy());
 					}
 					break;
 				case 0:
@@ -341,7 +339,7 @@ namespace Interfejs
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Linia Lotnicza:");
-			Console.WriteLine("			1. Wyúwietl nazwe");
+			Console.WriteLine("			1. Wyswietl nazwe");
 			Console.WriteLine("			2. Generuj Lot");
 			Console.WriteLine("");
 			Console.WriteLine("			0. Powrot");
@@ -358,10 +356,10 @@ namespace Interfejs
 				case 2:
 					Samolot s = TworzenieSamolotu();
 					try { LiniaL.dodajSamolot(s); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
-			
+
 
 					Trasa t = DodawanieTrasa(LiniaL);
-					try { LiniaL.dodajTrase(t); }catch (ListaException Le) { Console.WriteLine("			" + Le.Message);};
+					try { LiniaL.dodajTrase(t); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 
 					DateTime DataP = DataOdlotu();
 					DateTime DataK = DataPrzylotu();
@@ -385,7 +383,7 @@ namespace Interfejs
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie  Lotniskami:");
-			Console.WriteLine("			1. Wyúwietl nazwe");
+			Console.WriteLine("			1. Wy≈ìwietl nazwe");
 			Console.WriteLine("			2. Dodaj Lotnisko");
 			Console.WriteLine("			3. Usun Lotnisko");
 			Console.WriteLine("");
@@ -401,11 +399,11 @@ namespace Interfejs
 					break;
 				case 2:
 					Lotnisko lAdd = TworzenieLotniska();
-					try { LiniaL.dodajLotnisko(lAdd); } catch(ListaException Le) { Console.WriteLine("			" + Le.Message); };
+					try { LiniaL.dodajLotnisko(lAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Lotnisko lDelete = TworzenieLotniska();
-					try { LiniaL.usunLotnisko(lDelete); } catch(UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
+					try { LiniaL.usunLotnisko(lDelete); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 					break;
 				case 0:
 					break;
@@ -440,7 +438,7 @@ namespace Interfejs
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Samolotami:");
-			Console.WriteLine("			1. Wyúwietl nazwe");
+			Console.WriteLine("			1. Wy≈ìwietl nazwe");
 			Console.WriteLine("			2. Dodaj Samolot");
 			Console.WriteLine("			3. Usun Samolot");
 			Console.WriteLine("");
@@ -505,7 +503,7 @@ namespace Interfejs
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Lotami:");
-			Console.WriteLine("			1. Wyúwietl nazwe");
+			Console.WriteLine("			1. Wy≈ìwietl nazwe");
 			Console.WriteLine("			2. Dodaj Lot");
 			Console.WriteLine("			3. Usun Lot");
 			Console.WriteLine("");
@@ -519,11 +517,13 @@ namespace Interfejs
 					break;
 				case 2:
 					Lot lAdd = TworzenieLotu(LiniaL);
-					try { LiniaL.dodajLot(lAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
+					if (lAdd != null)
+						try { LiniaL.dodajLot(lAdd); } catch (ListaException Le) { Console.WriteLine("			" + Le.Message); };
 					break;
 				case 3:
 					Lot l = TworzenieLotu(LiniaL);
-					try { LiniaL.usunLot(l); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
+					if (l != null)
+						try { LiniaL.usunLot(l); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 
 					break;
 				case 0:
@@ -576,11 +576,17 @@ namespace Interfejs
 
 		public static Lot TworzenieLotu(LiniaLotnicza LL)
 		{
+			Trasa t = DodawanieTrasa(LL);
+			try { LL.dodajTrase(t); } catch (ListaException Le) { };
+
 			Samolot s = TworzenieSamolotu();
 			try { LL.dodajSamolot(s); } catch (ListaException Le) { };
 
-			Trasa t = DodawanieTrasa(LL);
-			try { LL.dodajTrase(t); } catch (ListaException Le) { };
+			if (s.getZasieg() < t.getDystans())
+			{
+				Console.WriteLine("			Zasieg wybranego samolotu jest mniejszy od dystansu trasy. Lot nie zostanie utworzony. ");
+				return null;
+			}
 
 			DateTime dataOdlotuDelete = DataOdlotu();
 			DateTime dataPrzylotuDelete = DataPrzylotu();
@@ -596,7 +602,7 @@ namespace Interfejs
 		{
 			Console.Clear();
 			Console.WriteLine("			Zarzadzanie Trasami:");
-			Console.WriteLine("			1. Wyúwietl nazwe");
+			Console.WriteLine("			1. Wy≈ìwietl nazwe");
 			Console.WriteLine("			2. Dodaj Trase");
 			Console.WriteLine("			3. Usun Trase");
 			Console.WriteLine("");
@@ -635,7 +641,7 @@ namespace Interfejs
 			Console.Write("			         ");
 			double dystan = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("			Dodawanie Lotnisk do trasy, by rozpoczac wcisnij dowolny przycisk procz 0");
-			Trasa Add = new Trasa(dystan,id);
+			Trasa Add = new Trasa(dystan, id);
 			while (true)
 			{
 				Console.Write("			         ");
@@ -663,7 +669,7 @@ namespace Interfejs
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
 			double dystan = Convert.ToDouble(Console.ReadLine());
-			Trasa Delete = new Trasa(dystan,id);
+			Trasa Delete = new Trasa(dystan, id);
 			try { LL.usunTrase(Delete); } catch (UsunException Ue) { Console.WriteLine("			" + Ue.Message); };
 		}
 		public static void OperacjeKlient(LiniaLotnicza LiniaL)
@@ -671,7 +677,7 @@ namespace Interfejs
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Kientami:");
-			Console.WriteLine("			1. Wyúwietl dane");
+			Console.WriteLine("			1. Wy≈ìwietl dane");
 			Console.WriteLine("			2. Dodaj Klienta");
 			Console.WriteLine("			3. Usun Klienta");
 			Console.WriteLine("");
