@@ -43,6 +43,7 @@ namespace LiniaLotnicza
 		public string getImie() { return this.Imie; }
 		public string getNazwisko() { return this.Nazwisko; }
 		public int getWiek() { return this.Wiek; }
+		public string getNarodowosc() { return this.Narodowosc; }
 		public override bool Equals(Object obj)
 		{
 			if ((obj == null) || !this.GetType().Equals(obj.GetType()))
