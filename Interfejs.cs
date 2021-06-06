@@ -1,12 +1,12 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 
 namespace Interfejs
 {
 	class Program
 	{
-		tatic void Main(string[] args)
+		static void Main(string[] args)
 		{
 
 			LiniaLotnicza LiniaL = new LiniaLotnicza("Lot");
@@ -302,11 +302,11 @@ namespace Interfejs
 					break;
 				case 2:
 					Lotnisko lAdd = TworzenieLotniska();
-					LiniaL.dodajLotnisko(lAdd);
+					try { LiniaL.dodajLotnisko(lAdd)} catch(ListaException Le) { Console.WriteLine("			"+Le.Message)};
 					break;
 				case 3:
 					Lotnisko lDelete = TworzenieLotniska();
-					LiniaL.usunLotnisko(lDelete);
+					try { LiniaL.usunLotnisko(lDelete)} catch(UsunException Ue) { Console.WriteLine("			" + Ue.Message)};
 					break;
 				case 0:
 					break;
@@ -532,18 +532,19 @@ namespace Interfejs
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
 			double dystan = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("			Podaj nazwe lotnisk");
-			Console.WriteLine("			Aby zakonczyc dodwawanie nacisnij 0");
-			string nazwa = "";
-			do
+			Console.WriteLine("			Dodawanie Lotnisk do trasy, by rozpoczac wcisnij dowolny przycisk procz 0");
+			Trasa Add = new Trasa(dystan);
+			while (true)
 			{
 				Console.Write("			         ");
-				nazwa = Console.ReadLine();
-				//Lotnisko l = TworzenieLotniska();
-				//LL.dodajLotnisko(l);
-
-			} while (nazwa != "0");
-			Trasa Add = new Trasa(dystan);
+				if (Console.ReadLine() == "0")
+					break;
+				Lotnisko l = TworzenieLotniska();
+				try { LL.dodajLotnisko(l)}; catch (ListaException Le) { }
+				Add.dodajLotnisko(l);
+				Console.WriteLine("			By kontynowac dodawanie kliknij dowolny przycisk procz 0");
+				Console.WriteLine("			By zakonczyc dodawanie wcisnij 0");
+			}
 			LL.dodajTrase(Add);
 			return Add;
 
