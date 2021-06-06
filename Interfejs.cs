@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Threading;
 
 namespace Interfejs
 {
@@ -27,6 +27,7 @@ namespace Interfejs
 
 			while (true)
 			{
+				Thread.Sleep(2000);
 				Console.Clear();
 				Console.WriteLine("");
 				Console.WriteLine("			1. Panel Administracyjny");
