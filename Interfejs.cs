@@ -6,18 +6,10 @@ namespace Interfejs
 {
 	class Program
 	{
-		static void Main(string[] args)
+		tatic void Main(string[] args)
 		{
 
 			LiniaLotnicza LiniaL = new LiniaLotnicza("Lot");
-
-			Regionalny samolotR = new Regionalny(100, "99823", 23);
-			LiniaL.dodajSamolot(samolotR);
-
-			Lotnisko L1 = new Lotnisko("Polska", "Warsaw", "09813");
-			LiniaL.dodajLotnisko(L1);
-			Lotnisko L2 = new Lotnisko("PoDlska", "W3arsaw", "098D13");
-			LiniaL.dodajLotnisko(L2);
 
 			Console.WriteLine("");
 			Console.WriteLine("		   Witamy w system kontroli lotow");
@@ -51,8 +43,8 @@ namespace Interfejs
 					case 1:
 						Console.Clear();
 						Console.WriteLine("");
-						Console.WriteLine("			1. Zarzadzanie  Linia Lotnicza"); //Barakuje metody generuju
-						Console.WriteLine("			2. Zarzadzanie  Lotniskami"); // Problem z usuwanie Lostniska
+						Console.WriteLine("			1. Zarzadzanie  Linia Lotnicza"); //OK
+						Console.WriteLine("			2. Zarzadzanie  Lotniskami"); //OK
 						Console.WriteLine("			3. Zarzadzanie  Samolotami"); //OK
 						Console.WriteLine("			4. Zarzadzanie  Lotami"); // Problem z usuwaniem
 						Console.WriteLine("			5. Zarzadzanie  Trasami"); //OK
@@ -108,15 +100,17 @@ namespace Interfejs
 								Console.WriteLine("");
 								Console.WriteLine("			Witaj w system rezerwacji blitw");
 
+								Klient K = TworzenieKlienta();
+								Rezerwacja R = new Rezerwacja(K);
 
-								//System rezewracji
+
 
 
 								break;
 							case 2:
 								Console.WriteLine("			Lista wyszukanych Polaczen");
 
-								//Szukanie Polaczen
+								WyswietLot(LiniaL);
 
 								break;
 							case 3:
@@ -148,9 +142,17 @@ namespace Interfejs
 			Console.WriteLine("			Loty: ");
 			foreach (Lot L in LiniaL.getLoty())
 			{
-				Console.WriteLine("			 Godziny Lotu: " + L.getDataPocz() + "  " + L.getDataKon());
+				Console.WriteLine("			 Godziny Lotu: " + L.getDataPocz() + "  " + L.getDataKon() + "  ");
+				WyswietTrasaJedna(L);
 			}
 			Console.ReadKey();
+		}
+
+
+		public static void WyswietTrasaJedna(Lot l)
+		{
+			Trasa t = l.getTrasa();
+			WyswietLotniskaAll(t);
 		}
 		public static void WyswietTrasa(LiniaLotnicza LiniaL)
 		{
@@ -159,8 +161,20 @@ namespace Interfejs
 			foreach (Trasa T in LiniaL.getTrasy())
 			{
 				Console.WriteLine("			" + T.getDystans());
+				WyswietLotniskaAll(T);
 			}
 			Console.ReadKey();
+		}
+
+		public static void WyswietLotniskaAll(Trasa T)
+		{
+
+			foreach (Lotnisko lotnisko in T.getLotniska())
+			{
+				Console.WriteLine("			 Panstwo: " + lotnisko.getKraj() + " Miasto " + lotnisko.getMiasto() + " ID: " + lotnisko.getId());
+			}
+
+
 		}
 		public static void WyswietLotniska(LiniaLotnicza LiniaL)
 		{
@@ -168,7 +182,7 @@ namespace Interfejs
 			Console.WriteLine("			Lotniska: ");
 			foreach (Lotnisko L in LiniaL.getLotniska())
 			{
-				Console.WriteLine("			" + L.getId());
+				Console.WriteLine("			" + L.getId() + " Miasto: " + L.getMiasto() + " Kraj: " + L.getKraj());
 			}
 			Console.ReadKey();
 		}
@@ -190,11 +204,36 @@ namespace Interfejs
 			Console.WriteLine("			  Klienci: ");
 			Console.WriteLine("");
 
+			string id = Console.ReadLine();
 
-			foreach (Klient K in LiniaL.getKlient())
+			Console.WriteLine("			Typ Kientami:");
+			Console.WriteLine("			1. Indywidualny");
+			Console.WriteLine("			2. Firma");
+			Console.WriteLine("");
+			Console.WriteLine("			0. Powrot");
+
+			Console.Write("			         ");
+			int wybor = Convert.ToInt32(Console.ReadLine());
+
+			switch (wybor)
 			{
-				Console.WriteLine("			" + K.getId());
+				case 1:
+					foreach (Indywidualny I in LiniaL.getKlient())
+					{
+						Console.WriteLine("			" + I.getId() + " " + I.getImie() + " " + I.getNazwisko() + " " + I.getWiek() + " " + I.Narodowosc);
+					}
+					break;
+				case 2:
 
+					foreach (PosrednikFirmy P in LiniaL.getKlient())
+					{
+						Console.WriteLine("			" + P.getId() + " " + P.getNazwaFirmy());
+					}
+					break;
+				case 0:
+					break;
+				default:
+					break;
 			}
 			Console.ReadKey();
 		}
@@ -214,11 +253,25 @@ namespace Interfejs
 			switch (wyborLinia)
 			{
 				case 1:
+					Console.Write("			         ");
 					Console.WriteLine(LiniaL.getNazwaLinii());
 					Console.ReadKey();
 					break;
 				case 2:
-					//Metoda generuj lot
+					Samolot s = TworzenieSamolotu();
+					LiniaL.dodajSamolot(s);
+
+					Trasa t = DodawanieTrasa(LiniaL);
+					LiniaL.dodajTrase(t);
+
+					DateTime DataP = DataOdlotu();
+					DateTime DataK = DataPrzytotu();
+
+
+					Console.WriteLine("			Podaj ID lotu");
+					Console.Write("			         ");
+					string id = Console.ReadLine();
+					LiniaL.generujLot(t, DataP, DataK, id);
 					break;
 				case 0:
 					break;
@@ -248,10 +301,12 @@ namespace Interfejs
 					WyswietLotniska(LiniaL);
 					break;
 				case 2:
-					DodawanieLotniska(LiniaL);
+					Lotnisko lAdd = TworzenieLotniska();
+					LiniaL.dodajLotnisko(lAdd);
 					break;
 				case 3:
-					UsuwanieLotniska(LiniaL);
+					Lotnisko lDelete = TworzenieLotniska();
+					LiniaL.usunLotnisko(lDelete);
 					break;
 				case 0:
 					break;
@@ -262,7 +317,7 @@ namespace Interfejs
 
 
 		}
-		public static void DodawanieLotniska(LiniaLotnicza LL)
+		public static Lotnisko TworzenieLotniska()
 		{
 			Console.Clear();
 			Console.WriteLine("");
@@ -270,36 +325,16 @@ namespace Interfejs
 			Console.WriteLine(" ");
 			Console.WriteLine("			Podaj Panstwo Lotniska");
 			Console.Write("			         ");
-			string krajDodaj = Console.ReadLine();
+			string kraj = Console.ReadLine();
 			Console.WriteLine("			Podaj Miasto Lotniska");
 			Console.Write("			         ");
-			string miastoDodaj = Console.ReadLine();
+			string miasto = Console.ReadLine();
 			Console.WriteLine("			Podaj ID Lotniska");
 			Console.Write("			         ");
-			string idDodaj = Console.ReadLine();
-			Lotnisko l_Add = new Lotnisko(krajDodaj, miastoDodaj, idDodaj);
-			LL.dodajLotnisko(l_Add);
-		}
-		public static void UsuwanieLotniska(LiniaLotnicza LL)
-		{
-			Console.Clear();
-			Console.WriteLine("");
-			Console.WriteLine("			Usuwanie Lotniska");
-			Console.WriteLine(" ");
-			Console.WriteLine("			Podaj Panstwo Lotniska");
-			Console.Write("			         ");
-			string krajUsun = Console.ReadLine();
-			Console.WriteLine("			Podaj Miasto Lotniska");
-			Console.Write("			         ");
-			string miastoUsun = Console.ReadLine();
-			Console.WriteLine("			Podaj ID Lotniska");
-			Console.Write("			         ");
-			string idUsun = Console.ReadLine();
-			Lotnisko l_Delete = new Lotnisko(krajUsun, miastoUsun, idUsun);
-			LL.usunLotnisko(l_Delete);
-		}
+			string id = Console.ReadLine();
+			return new Lotnisko(kraj, miasto, id);
 
-
+		}
 
 		public static void OperacjeSamolot(LiniaLotnicza LiniaL)
 		{
@@ -319,10 +354,12 @@ namespace Interfejs
 					WyswietSamolot(LiniaL);
 					break;
 				case 2:
-					DodawanieSamolotu(LiniaL);
+					Samolot sAdd = TworzenieSamolotu();
+					LiniaL.dodajSamolot(sAdd);
 					break;
 				case 3:
-					UsuwanieSamolotu(LiniaL);
+					Samolot sDelete = TworzenieSamolotu();
+					LiniaL.usunSamolot(sDelete);
 					break;
 				case 0:
 					break;
@@ -331,7 +368,7 @@ namespace Interfejs
 			}
 		}
 
-		public static Samolot DodawanieSamolotu(LiniaLotnicza LL)
+		public static Samolot TworzenieSamolotu()
 		{
 			Console.Clear();
 			Console.WriteLine("");
@@ -339,66 +376,31 @@ namespace Interfejs
 			Console.WriteLine(" ");
 			Console.WriteLine("			Podaj Zasieg Samolotu");
 			Console.Write("			         ");
-			double zasiegDodaj = Convert.ToDouble(Console.ReadLine());
+			double zasieg = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("			Podaj ID Samolotu");
 			Console.Write("			         ");
-			string idDodaj = Console.ReadLine();
+			string id = Console.ReadLine();
 			Console.WriteLine("			Podaj Liczbe miejsc Samolotu");
 			Console.Write("			         ");
-			int miejscaDodaj = Convert.ToInt32(Console.ReadLine());
-			if (zasiegDodaj < 1000)
+			int miejsca = Convert.ToInt32(Console.ReadLine());
+			if (zasieg < 1000)
 			{
-				Regionalny samolotR = new Regionalny(zasiegDodaj, idDodaj, miejscaDodaj);
-				LL.dodajSamolot(samolotR);
+				Regionalny samolotR = new Regionalny(zasieg, id, miejsca);
 				return samolotR;
 			}
-			else if (zasiegDodaj < 5000)
+			else if (zasieg < 5000)
 			{
-				Sredniodystansowy samolotS = new Sredniodystansowy(zasiegDodaj, idDodaj, miejscaDodaj);
-				LL.dodajSamolot(samolotS);
+				Sredniodystansowy samolotS = new Sredniodystansowy(zasieg, id, miejsca);
 				return samolotS;
 			}
 			else
 			{
-				Dlugodystansowy samolotD = new Dlugodystansowy(zasiegDodaj, idDodaj, miejscaDodaj);
-				LL.dodajSamolot(samolotD);
+				Dlugodystansowy samolotD = new Dlugodystansowy(zasieg, id, miejsca);
 				return samolotD;
 			}
 
 		}
-		public static void UsuwanieSamolotu(LiniaLotnicza LL)
-		{
-			Console.Clear();
-			Console.WriteLine("");
-			Console.WriteLine("			Usuwanie Samolotu");
-			Console.WriteLine(" ");
-			Console.WriteLine("			Podaj Zasieg Samolotu");
-			Console.Write("			         ");
-			double zasiegUsun = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("			Podaj ID Samolotu");
-			Console.Write("			         ");
-			string idUsun = Console.ReadLine();
-			Console.WriteLine("			Podaj Liczbe miejsc Samolotu");
-			Console.Write("			         ");
-			int miejscaUsun = Convert.ToInt32(Console.ReadLine());
 
-			if (zasiegUsun < 1000)
-			{
-				Regionalny samolotR = new Regionalny(zasiegUsun, idUsun, miejscaUsun);
-				LL.usunSamolot(samolotR);
-			}
-			else if (zasiegUsun < 5000)
-			{
-				Sredniodystansowy samolotS = new Sredniodystansowy(zasiegUsun, idUsun, miejscaUsun);
-				LL.usunSamolot(samolotS);
-			}
-			else
-			{
-				Dlugodystansowy samolotD = new Dlugodystansowy(zasiegUsun, idUsun, miejscaUsun);
-				LL.usunSamolot(samolotD);
-			}
-
-		}
 		public static void OperacjeLot(LiniaLotnicza LiniaL)
 		{
 			Console.Clear();
@@ -417,53 +419,13 @@ namespace Interfejs
 					WyswietLot(LiniaL);
 					break;
 				case 2:
-					Samolot S = DodawanieSamolotu(LiniaL);
-
-					Trasa T = DodawanieTrasa(LiniaL);
-
-					Console.WriteLine("");
-					Console.WriteLine("			Podaj Date odlotu: ");
-					Console.WriteLine("");
-					Console.Write("			Rok odlotu: ");
-					Console.Write("			         ");
-					int rokOdlotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Miesiac odlotu: ");
-					int miesieacOdlotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Dzien odlotu: ");
-					int dzienOdlotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Godzine odlotu: ");
-					int godzinaOdlotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Minute odlotu: ");
-					int minutaOdlotu = Convert.ToInt32(Console.ReadLine());
-
-					DateTime dataOdlotu = new DateTime(rokOdlotu, miesieacOdlotu, dzienOdlotu, godzinaOdlotu, minutaOdlotu, 0);
-
-
-					Console.WriteLine("");
-					Console.WriteLine("			Podaj Date przylotu: ");
-					Console.WriteLine("");
-					Console.Write("			Rok przylotu: ");
-					int rokPrzylotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Miesiac przylotu: ");
-					int miesieacPrzylotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Dzien przylotu: ");
-					int dzienPrzylotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Godzine przylotu: ");
-					int godzinaPrzylotu = Convert.ToInt32(Console.ReadLine());
-					Console.Write("			Minuta przylotu: ");
-					int minutaPrzylotu = Convert.ToInt32(Console.ReadLine());
-
-					DateTime dataPrzylotu = new DateTime(rokPrzylotu, miesieacPrzylotu, dzienPrzylotu, godzinaPrzylotu, minutaPrzylotu, 0);
-
-					Lot L = new Lot(S, T, dataOdlotu, dataPrzylotu);
-
-					LiniaL.dodajLot(L);
-
-
-
+					Lot lDelete = TworzenieLotu(LiniaL);
+					LiniaL.dodajLot(lDelete);
 					break;
 				case 3:
-					UsuwanieSamolotu(LiniaL);
+					Lot l = TworzenieLotu(LiniaL);
+					LiniaL.usunLot(l);
+
 					break;
 				case 0:
 					break;
@@ -471,6 +433,65 @@ namespace Interfejs
 					break;
 
 			}
+		}
+
+		public static DateTime DataOdlotu()
+		{
+
+			Console.WriteLine("");
+			Console.WriteLine("			Podaj Date odlotu: ");
+			Console.WriteLine("");
+			Console.Write("			Rok odlotu: ");
+			int rokOdlotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Miesiac odlotu: ");
+			int miesieacOdlotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Dzien odlotu: ");
+			int dzienOdlotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Godzine odlotu: ");
+			int godzinaOdlotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Minute odlotu: ");
+			int minutaOdlotu = Convert.ToInt32(Console.ReadLine());
+
+			return new DateTime(rokOdlotu, miesieacOdlotu, dzienOdlotu, godzinaOdlotu, minutaOdlotu, 0);
+
+		}
+		public static DateTime DataPrzytotu()
+		{
+			Console.WriteLine("");
+			Console.WriteLine("			Podaj Date przylotu: ");
+			Console.WriteLine("");
+			Console.Write("			Rok przylotu: ");
+			int rokPrzylotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Miesiac przylotu: ");
+			int miesieacPrzylotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Dzien przylotu: ");
+			int dzienPrzylotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Godzine przylotu: ");
+			int godzinaPrzylotu = Convert.ToInt32(Console.ReadLine());
+			Console.Write("			Minuta przylotu: ");
+			int minutaPrzylotu = Convert.ToInt32(Console.ReadLine());
+
+			return new DateTime(rokPrzylotu, miesieacPrzylotu, dzienPrzylotu, godzinaPrzylotu, minutaPrzylotu, 0);
+
+		}
+
+		public static Lot TworzenieLotu(LiniaLotnicza LL)
+		{
+			Samolot s = TworzenieSamolotu();
+			LL.dodajSamolot(s);
+
+			Trasa t = DodawanieTrasa(LL);
+			LL.dodajTrase(t);
+
+			DateTime dataOdlotuDelete = DataOdlotu();
+			DateTime dataPrzylotuDelete = DataPrzytotu();
+
+
+			Console.WriteLine("			Podaj ID lotu");
+			Console.Write("			         ");
+			string id = Console.ReadLine();
+			return new Lot(s, t, dataOdlotuDelete, dataPrzylotuDelete, id);
+
 		}
 		public static void OperacjeTrasa(LiniaLotnicza LiniaL)
 		{
@@ -510,10 +531,21 @@ namespace Interfejs
 			Console.WriteLine(" ");
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
-			double dystanDodaj = Convert.ToDouble(Console.ReadLine());
-			Trasa t_Add = new Trasa(dystanDodaj);
-			LL.dodajTrase(t_Add);
-			return t_Add;
+			double dystan = Convert.ToDouble(Console.ReadLine());
+			Console.WriteLine("			Podaj nazwe lotnisk");
+			Console.WriteLine("			Aby zakonczyc dodwawanie nacisnij 0");
+			string nazwa = "";
+			do
+			{
+				Console.Write("			         ");
+				nazwa = Console.ReadLine();
+				//Lotnisko l = TworzenieLotniska();
+				//LL.dodajLotnisko(l);
+
+			} while (nazwa != "0");
+			Trasa Add = new Trasa(dystan);
+			LL.dodajTrase(Add);
+			return Add;
 
 		}
 		public static void UsuwanieTrasa(LiniaLotnicza LL)
@@ -524,9 +556,9 @@ namespace Interfejs
 			Console.WriteLine(" ");
 			Console.WriteLine("			Podaj dystans Trasy");
 			Console.Write("			         ");
-			double dystanUsun = Convert.ToDouble(Console.ReadLine());
-			Trasa t_Delete = new Trasa(dystanUsun);
-			LL.usunTrase(t_Delete);
+			double dystan = Convert.ToDouble(Console.ReadLine());
+			Trasa Delete = new Trasa(dystan);
+			LL.usunTrase(Delete);
 		}
 		public static void OperacjeKlient(LiniaLotnicza LiniaL)
 		{
@@ -546,10 +578,12 @@ namespace Interfejs
 					WyswietKlient(LiniaL);
 					break;
 				case 2:
-					DodawanieKlient(LiniaL);
+					Klient kAdd = TworzenieKlienta();
+					LiniaL.dodajKlienta(kAdd);
 					break;
 				case 3:
-					UsuwanieKlient(LiniaL);
+					Klient kDelete = TworzenieKlienta();
+					LiniaL.usunKlienta(kDelete);
 					break;
 				case 0:
 					break;
@@ -558,14 +592,14 @@ namespace Interfejs
 
 			}
 		}
-		public static void DodawanieKlient(LiniaLotnicza LL)
+		public static Klient TworzenieKlienta()
 		{
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Dodawanie Klienta :");
 			Console.WriteLine("			Podaj ID");
 			Console.Write("			         ");
-			string idDodaj = Console.ReadLine();
+			string id = Console.ReadLine();
 
 			Console.WriteLine("			Typ Kientami:");
 			Console.WriteLine("			1. Indywidualny");
@@ -579,19 +613,21 @@ namespace Interfejs
 			switch (wyborTypu)
 			{
 				case 1:
-					Indywidualny I = KlientIndywidualy(idDodaj);
-					LL.dodajKlienta(I);
+					Indywidualny I = KlientIndywidualy(id);
+					return I;
 					break;
 				case 2:
-					PosrednikFirmy P = Posrednikfirmy(idDodaj);
-					LL.dodajKlienta(P);
+					PosrednikFirmy P = Posrednikfirmy(id);
+					return P;
 					break;
 				case 0:
 					break;
 				default:
 					break;
 			}
+			return null;
 		}
+
 		public static Indywidualny KlientIndywidualy(string id)
 		{
 			Console.Clear();
@@ -629,43 +665,6 @@ namespace Interfejs
 
 			PosrednikFirmy KlientF = new PosrednikFirmy(id, nazwa);
 			return KlientF;
-		}
-
-		public static void UsuwanieKlient(LiniaLotnicza LL)
-		{
-			Console.Clear();
-			Console.WriteLine("");
-			Console.WriteLine("			Usuwanie Klienta");
-			Console.WriteLine(" ");
-			Console.WriteLine("			Podaj ID");
-			Console.Write("			         ");
-			string id = Console.ReadLine();
-			Console.WriteLine("			Typ Kientami:");
-			Console.WriteLine("			1. Indywidualny");
-			Console.WriteLine("			2. Firma");
-			Console.WriteLine("");
-			Console.WriteLine("			0. Powrot");
-
-			Console.Write("			         ");
-			int wyborTypu = Convert.ToInt32(Console.ReadLine());
-
-			switch (wyborTypu)
-			{
-				case 1:
-					Indywidualny I = KlientIndywidualy(id);
-					LL.usunKlienta(I);
-					break;
-				case 2:
-					PosrednikFirmy P = Posrednikfirmy(id);
-					LL.usunKlienta(P);
-					break;
-				case 0:
-					break;
-				default:
-					break;
-			}
-
-
 		}
 	}
 }
