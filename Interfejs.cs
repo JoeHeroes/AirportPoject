@@ -85,9 +85,10 @@ namespace LiniaLotnicza
 						Console.Clear();
 						Console.WriteLine("");
 						Console.WriteLine("			1. Rezerwuj bilet");
-						Console.WriteLine("			2. Wyœwietl liste lotow");
-						Console.WriteLine("			3. Wyœwietl liste tras");
-						Console.WriteLine("			4. Wyœwietl liste lotnisk");
+						Console.WriteLine("			2. Usun rezerwacje");
+						Console.WriteLine("			3. Wyswietl liste lotow");
+						Console.WriteLine("			4. Wyswietl liste tras");
+						Console.WriteLine("			5. Wyswietl liste lotnisk");
 						Console.WriteLine("");
 						Console.WriteLine("			0. Powrot");
 
@@ -152,22 +153,48 @@ namespace LiniaLotnicza
 
 									R.dodajBilet(B);
 								}
-
-
-
-
 								L.dodajRezerwacje(R);
-
-
-
 								break;
 							case 2:
-								WyswietLot(LiniaL);
+								Console.WriteLine("");
+								Console.WriteLine("			Witaj w systemie do usuwania rezerwacji biletow");
+
+								Klient Kl = TworzenieKlienta();
+								Rezerwacja Re = new Rezerwacja(Kl);
+								try { LiniaL.dodajKlienta(Kl); } catch (ListaException Le) { };
+								Console.WriteLine("");
+								Console.WriteLine("			1. Nie znasz ID lotu");
+								Console.WriteLine("			2. Znasz ID lotu");
+								int wybor1 = Convert.ToInt32(Console.ReadLine());
+								if (wybor1 == 1) WyswietLot(LiniaL);
+								Console.WriteLine("");
+								Console.WriteLine("			Wpisz ID wybranego lotu");
+
+
+								string wyborID1 = Console.ReadLine();
+
+								Lot Lo = ZnajdzLotID(LiniaL, wyborID1);
+
+								if (Lo == null)
+								{
+									Console.WriteLine("			Nie wystepuje Lot o podanym ID");
+									break;
+								}
+								Rezerwacja r = RezerwacjaZnajdz(Lo, Kl);
+								if (r == null)
+								{
+									Console.WriteLine("			Podany klient nie zarezerwowal zadnych biletow w tym locie.");
+									break;
+								}
+								Lo.usunRezerwacje(r);
 								break;
 							case 3:
-								WyswietTrasa(LiniaL);
+								WyswietLot(LiniaL);
 								break;
 							case 4:
+								WyswietTrasa(LiniaL);
+								break;
+							case 5:
 								WyswietLotniska(LiniaL);
 								break;
 							case 0:
@@ -182,6 +209,16 @@ namespace LiniaLotnicza
 						break;
 				}
 			}
+		}
+		public static Rezerwacja RezerwacjaZnajdz(Lot L, Klient K)
+		{
+			List<Rezerwacja> rez = L.getRezerwacje();
+			foreach (Rezerwacja r in rez)
+			{
+				if (K.Equals(r.getKlient()))
+					return r;
+			}
+			return null;
 		}
 
 		public static int LiczbaWolnychMiejsc(Lot L)
@@ -383,7 +420,7 @@ namespace LiniaLotnicza
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie  Lotniskami:");
-			Console.WriteLine("			1. Wyœwietl nazwe");
+			Console.WriteLine("			1. Wyswietl nazwe");
 			Console.WriteLine("			2. Dodaj Lotnisko");
 			Console.WriteLine("			3. Usun Lotnisko");
 			Console.WriteLine("");
@@ -438,7 +475,7 @@ namespace LiniaLotnicza
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Samolotami:");
-			Console.WriteLine("			1. Wyœwietl nazwe");
+			Console.WriteLine("			1. Wyswietl nazwe");
 			Console.WriteLine("			2. Dodaj Samolot");
 			Console.WriteLine("			3. Usun Samolot");
 			Console.WriteLine("");
@@ -503,7 +540,7 @@ namespace LiniaLotnicza
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Lotami:");
-			Console.WriteLine("			1. Wyœwietl nazwe");
+			Console.WriteLine("			1. Wyswietl nazwe");
 			Console.WriteLine("			2. Dodaj Lot");
 			Console.WriteLine("			3. Usun Lot");
 			Console.WriteLine("");
@@ -602,7 +639,7 @@ namespace LiniaLotnicza
 		{
 			Console.Clear();
 			Console.WriteLine("			Zarzadzanie Trasami:");
-			Console.WriteLine("			1. Wyœwietl nazwe");
+			Console.WriteLine("			1. Wyswietl nazwe");
 			Console.WriteLine("			2. Dodaj Trase");
 			Console.WriteLine("			3. Usun Trase");
 			Console.WriteLine("");
@@ -677,7 +714,7 @@ namespace LiniaLotnicza
 			Console.Clear();
 			Console.WriteLine("");
 			Console.WriteLine("			Zarzadzanie Kientami:");
-			Console.WriteLine("			1. Wyœwietl dane");
+			Console.WriteLine("			1. Wyswietl dane");
 			Console.WriteLine("			2. Dodaj Klienta");
 			Console.WriteLine("			3. Usun Klienta");
 			Console.WriteLine("");
