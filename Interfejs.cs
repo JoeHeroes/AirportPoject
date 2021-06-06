@@ -44,12 +44,12 @@ namespace Interfejs
 					case 1:
 						Console.Clear();
 						Console.WriteLine("");
-						Console.WriteLine("			1. Zarzadzanie  Linia Lotnicza"); //OK
-						Console.WriteLine("			2. Zarzadzanie  Lotniskami"); //OK
-						Console.WriteLine("			3. Zarzadzanie  Samolotami"); //OK
-						Console.WriteLine("			4. Zarzadzanie  Lotami"); // Problem z usuwaniem
-						Console.WriteLine("			5. Zarzadzanie  Trasami"); //OK
-						Console.WriteLine("			6. Zarzadzanie  Kientami"); //OK
+						Console.WriteLine("			1. Zarzadzanie  Linia Lotnicza");
+						Console.WriteLine("			2. Zarzadzanie  Lotniskami"); 
+						Console.WriteLine("			3. Zarzadzanie  Samolotami"); 
+						Console.WriteLine("			4. Zarzadzanie  Lotami"); 
+						Console.WriteLine("			5. Zarzadzanie  Trasami"); 
+						Console.WriteLine("			6. Zarzadzanie  Kientami"); 
 						Console.WriteLine("");
 						Console.WriteLine("			0. Powrot");
 
@@ -85,10 +85,9 @@ namespace Interfejs
 						Console.Clear();
 						Console.WriteLine("");
 						Console.WriteLine("			1. Rezerwuj bilet");
-						Console.WriteLine("			2. Szukaj polaczen");
-						Console.WriteLine("			3. Wyœwietl liste lotow");
-						Console.WriteLine("			4. Wyœwietl liste tras");
-						Console.WriteLine("			5. Wyœwietl liste lotnisk");
+						Console.WriteLine("			2. Wyœwietl liste lotow");
+						Console.WriteLine("			3. Wyœwietl liste tras");
+						Console.WriteLine("			4. Wyœwietl liste lotnisk");
 						Console.WriteLine("");
 						Console.WriteLine("			0. Powrot");
 
@@ -103,24 +102,74 @@ namespace Interfejs
 
 								Klient K = TworzenieKlienta();
 								Rezerwacja R = new Rezerwacja(K);
+								LiniaL.dodajKlienta(K);
 
+								//wstaw wyjatek
+								Console.WriteLine("");
+								Console.WriteLine("			1. Nie znasz ID lotu");
+								Console.WriteLine("			2. Znasz ID lotu");
+								int wybor = Convert.ToInt32(Console.ReadLine());
+								if(wybor==1) WyswietLot(LiniaL);
+
+
+								Console.WriteLine("");
+								Console.WriteLine("			Wpisz ID wybranego lotu");
+
+
+								string wyborID = Console.ReadLine();
+
+								Lot L = ZnajdzLotID(LiniaL, wyborID);
+
+								if (L==null) 
+                                {
+									Console.WriteLine("			Nie wystepuje Lot o podanym ID");
+									break;
+								}
+
+								Console.WriteLine("			Podaj miasto lotniska docelowego wybranego lotu");
+								string wyborMiasta = Console.ReadLine();
+
+
+								Lotnisko LotniskoL = ZnajdzMiejsceLot(L, wyborMiasta);
+
+								if (LotniskoL==null) 
+                                {
+									Console.WriteLine("			Podane miasto docelowe nie znajduje sie w locie");
+									break;
+								}
+
+								Console.WriteLine("			Podaj liczbe biletow, ktore chcesz zarezerwowac");
+								int liczbaB = Convert.ToInt32(Console.ReadLine());
+
+								int liczbaMiejsc = LiczbaWolnychMiejsc(Lot L);
+
+								if (liczbaB> liczbaMiejsc)
+								{
+									Console.WriteLine("			Podane liczba biletow jest wieksza niz liczba dostpnych miejsc");
+									break;
+								}
+								for(int i= 0; i<liczbaB; i++)
+                                {
+									Bilet B = new Bilet(LotniskoL, Lot.getDataPocz(), Lot.getDataKon());
+
+									R.dodajBilet(B);
+								}
+
+
+
+
+								L.dodajRezerwacje(R);
 
 
 
 								break;
 							case 2:
-								Console.WriteLine("			Lista wyszukanych Polaczen");
-
 								WyswietLot(LiniaL);
-
 								break;
 							case 3:
-								WyswietLot(LiniaL);
-								break;
-							case 4:
 								WyswietTrasa(LiniaL);
 								break;
-							case 5:
+							case 4:
 								WyswietLotniska(LiniaL);
 								break;
 							case 0:
@@ -137,14 +186,57 @@ namespace Interfejs
 			}
 		}
 
+		public static int LiczbaWolnychMiejsc(Lot L)
+		{
+			List<Rezerwacja> R = L.getRezerwacja();
+			int liczba = 0;
+			foreach (Rezerwacja Rez in R)
+			{
+				foreach (Bilet B in Rez.getBilety())
+				{
+					liczba++;
+
+				}
+			}
+			return L.getSamolot().getLiczbaMiejsc() - liczba;
+		}
+		public static Lot ZnajdzLotID(LiniaLotnicza LiniaL, string wyborID)
+        {
+			foreach (Lot L in LiniaL.getLoty())
+			{
+				if (wyborID == L.getId())
+				{
+					return L;
+				}
+			}
+			return null;
+		}
+
+		public static Lot ZnajdzMiejsceLot(Lot lot, string miasto)
+		{
+			Trasa T = lot.getTrasa();
+			foreach (Lotnisko L in T.getLotniska())
+			{
+				if (miasto == L.getMiasto())
+				{
+					return L;
+				}
+			}
+			return null;
+		}
+
+
+
 		public static void WyswietLot(LiniaLotnicza LiniaL)
 		{
 			Console.WriteLine("");
 			Console.WriteLine("			Loty: ");
 			foreach (Lot L in LiniaL.getLoty())
 			{
+				Console.WriteLine("			 Id Lotu: " +L.getId());
 				Console.WriteLine("			 Godziny Lotu: " + L.getDataPocz() + "  " + L.getDataKon() + "  ");
 				WyswietTrasaJedna(L);
+				
 			}
 			Console.ReadKey();
 		}
@@ -155,6 +247,7 @@ namespace Interfejs
 			Trasa t = l.getTrasa();
 			Console.WriteLine("			Id: " + t.getId());
 			WyswietLotniskaAll(t);
+			Console.ReadKey();
 		}
 		public static void WyswietTrasa(LiniaLotnicza LiniaL)
 		{
