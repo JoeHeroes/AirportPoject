@@ -6,18 +6,21 @@ namespace LiniaLotnicza
 	{
 		private double Dystans;
 		private List<Lotnisko> Lotniska;
+		private string Id;
 		public Trasa() { }
 
 		// Zwykly konstruktor
-		public Trasa(double dystans)
+		public Trasa(double dystans, string id)
 		{
 			if (dystans <= 0)
 				throw new DystansException("Dystans nie moze byc mniejszy od zera.");
 			this.Dystans = dystans;
+			this.Id = id;
 			Lotniska = new List<Lotnisko>();
 		}
 
 		public double getDystans() { return this.Dystans; }
+		public string getId() { return this.Id; }
 		public List<Lotnisko> getLotniska() { return this.Lotniska; }
 		public void dodajLotnisko(Lotnisko L) { Lotniska.Add(L); }
 		public void usunLotnisko(Lotnisko L)
@@ -44,7 +47,7 @@ namespace LiniaLotnicza
 				if (l.Count != this.Lotniska.Count)     // posiadaja taka sama
 					return false;                       // liczbe elementow.
 
-				if (this.Dystans == t.getDystans() && porownajLotniska(t))
+				if (this.Dystans == t.getDystans() && porownajLotniska(t) && this.Id==this.getId())
 					return true;
 				else
 					return false;
