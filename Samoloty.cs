@@ -29,7 +29,7 @@ namespace LiniaLotnicza
 			else
 			{
 				Samolot s = (Samolot)obj;
-				return (this.Id == s.getId() && this.Zasieg == s.getZasieg()&& this.MaksymalnyZasieg== s.getMaksymalnyZasieg() && this.LiczbaMiejsc == s.getLiczbaMiejsc());
+				return (this.Id == s.getId() && this.Zasieg == s.getZasieg()&& this.MaksymalnyZasieg == s.getMaksymalnyZasieg() && this.LiczbaMiejsc == s.getLiczbaMiejsc());
 			}
 		}
 	}
