@@ -187,8 +187,8 @@ namespace LiniaLotnicza
 			for (int i = 0; i < this.loty.Count; i++)
 			{
 				List<Rezerwacja> rezerwacje = loty[i].getRezerwacje();
-				for(int j=0;j<rezerwacje.Count;j++)
-                {
+				for (int j = 0; j < rezerwacje.Count; j++)
+				{
 					if (k.Equals(rezerwacje[j].getKlient()))
 					{
 						return true;
@@ -235,20 +235,20 @@ namespace LiniaLotnicza
 				throw new UsunException("Dane lotnisko ma przypisane trasy. Nie mozna usunac.");
 			lotniska.Remove(l);
 		}
-	private bool porownanieLotniskoLotniska(Lotnisko l)
-	{
-		for (int i = 0; i < this.lotniska.Count; i++)
+		private bool porownanieLotniskoLotniska(Lotnisko l)
 		{
-			if (l.Equals(lotniska[i]))
+			for (int i = 0; i < this.lotniska.Count; i++)
 			{
-				return true;
+				if (l.Equals(lotniska[i]))
+				{
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
-	}
 
-	private bool porownanieLotniskoTrasy(Lotnisko l)
-	{
+		private bool porownanieLotniskoTrasy(Lotnisko l)
+		{
 			for (int i = 0; i < this.trasy.Count; i++)
 			{
 				List<Lotnisko> lotniska = trasy[i].getLotniska();
@@ -261,12 +261,80 @@ namespace LiniaLotnicza
 				}
 			}
 			return false;
+		}
+
+		//Generowanie lotow.
+		public void generujLot(Trasa trasa, DateTime DataP, DateTime DataK, string Id)
+		{
+			//Sprawdzenie czy lot o podanym id wystepuje na liscie lotow.
+			if (sprawdzId(Id))
+				throw new GenerujLotException("Lot o podanym Id wystapil juz na liscie. Nie mozna dodac.");
+
+			//Sprawdzenie dat.
+			if (DataK < DataP)
+				throw new GenerujLotException("Data zakonczenia lotu nie moze wystapic przed data rozpoczecia.");
+
+			//Nastepnie wykonywany jest dobor samolotu
+			double Dystans = trasa.getDystans();
+			if(Dystans <= 1000)
+            {
+				Regionalny r = (Regionalny)znajdzSamolot(DataP, DataK,Dystans);
+				if (r == null)
+					throw new GenerujLotException("Na liscie nie wystepuje samolot Regionalny, ktory moglby oblusyzc wybrana trase.");
+				dodajLot(new Lot(r, trasa, DataP, DataK,  Id));
+            }
+			else if(1000 < Dystans && Dystans <=5000)
+            {
+				Sredniodystansowy sr = (Sredniodystansowy)znajdzSamolot(DataP, DataK, Dystans);
+				if (sr == null)
+					throw new GenerujLotException("Na liscie nie wystepuje samolot Sredniodystansowy, ktory moglby oblusyzc wybrana trase.");
+				dodajLot(new Lot(sr, trasa, DataP,  DataK,  Id));
+			}
+			else if(5000<Dystans && Dystans<=20000)
+            {
+				Dlugodystansowy dl = (Dlugodystansowy)znajdzSamolot(DataP, DataK, Dystans);
+				if (dl == null)
+					throw new GenerujLotException("Na liscie nie wystepuje samolot Dlugodystansowy, ktory moglby oblusyzc wybrana trase.");
+				dodajLot(new Lot(dl, trasa, DataP, DataK, Id));
+			}
+		}
+		private bool sprawdzId(string Id)
+        {
+			for(int i=0;i<loty.Count;i++)
+            {
+				if (Id == loty[i].getId())
+					return true;
+            }
+			return false;
+		}
+		private Samolot znajdzSamolot(DateTime DataP, DateTime DataK,double Dystans)
+        {
+			for(int i=0;i<samoloty.Count;i++)
+            {
+				if (Dystans > samoloty[i].getZasieg())
+					continue;
+				//Metoda dostepnosc Samolotu sprawdza czy dany samolot jest uzywany w danym przedziale czasowym.
+				//Metoda zwraca true jezeli jest uzywany i false jezeli nie.
+				if (!dostepnoscSamolotu(samoloty[i],DataP, DataK))
+					return samoloty[i];
+            }
+			return null;
+			
+        }
+		private bool dostepnoscSamolotu(Samolot s, DateTime DataP, DateTime DataK)
+        {
+			for(int i=0;i<loty.Count;i++)
+            {
+				if (s.Equals(loty[i].getSamolot()) && loty[i].getDataPocz()==DataP &&loty[i].getDataKon()==DataK)
+					return true;
+			}
+			return false;
+        }
+
+
+
+
 	}
-
-
-
-
-}
 
 
 
@@ -281,6 +349,10 @@ namespace LiniaLotnicza
 	public class UsunException : LiniaLotniczaException
     {
 		public UsunException(string msg) : base(msg) { }
+	}
+	public class GenerujLotException : LiniaLotniczaException
+    {
+		public GenerujLotException(string msg) : base(msg) { }
 	}
 
 }

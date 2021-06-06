@@ -8,23 +8,26 @@ namespace LiniaLotnicza
 		private List<Rezerwacja> Rezerwacje;
 		private Samolot samolot;
 		private Trasa trasa;
+		private string Id;
 		private DateTime dataPocz;
 		private DateTime dataKon;
 		public Lot() { }
 
 		//Zwykly konstruktor
-		public Lot(Samolot s, Trasa t, DateTime dataPo, DateTime dataKo)
+		public Lot(Samolot s, Trasa t, DateTime dataPo, DateTime dataKo,string id)
 		{ if (dataPo > dataKo)
 				throw new DataException("Data konca lotu nie może być wcześniejsza od daty początku.");
 			else
 			{
 				this.dataPocz = dataPo; this.dataKon = dataKo; this.trasa = t; this.samolot = s; Rezerwacje = new List<Rezerwacja>();
+				this.Id = id;
 			}
 		}
 
 		public List<Rezerwacja> getRezerwacje() { return this.Rezerwacje; }
 		public Samolot getSamolot() { return this.samolot; }
 		public Trasa getTrasa() { return this.trasa; }
+		public string getId() { return this.Id; }
 		public void dodajRezerwacje(Rezerwacja r) { Rezerwacje.Add(r); }
 		public void usunRezerwacje(Rezerwacja r)
 		{
@@ -50,7 +53,7 @@ namespace LiniaLotnicza
 				if (rez.Count != this.Rezerwacje.Count)                 // posiadaja taka sama
 					return false;                                      // liczbe elementow.
 
-				if (this.samolot.Equals(lot.getSamolot()) && this.trasa.Equals(lot.getTrasa()) && this.dataPocz == lot.getDataPocz() && this.dataKon == lot.getDataKon() && porownajRezerwacje(lot))
+				if (this.samolot.Equals(lot.getSamolot()) && this.trasa.Equals(lot.getTrasa()) && this.dataPocz == lot.getDataPocz() && this.dataKon == lot.getDataKon() && porownajRezerwacje(lot)&& this.Id==lot.getId())
 					return true;
 				else
 					return false;
